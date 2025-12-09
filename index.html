@@ -1,0 +1,4115 @@
+        </div>
+        
+        <div id="security" class="section">
+            <h2>🔐 Security Best Practices</h2>
+            
+            <h3>SQL Injection Prevention:</h3>
+            <pre><code>-- ❌ VULNERABLE: String concatenation
+user_input = "admin' OR '1'='1"
+query = f"SELECT * FROM users WHERE name = '{user_input}'"
+# Results in: SELECT * FROM users WHERE name = 'admin' OR '1'='1'
+# Returns ALL users!
+
+-- ✅ SAFE: Parameterized queries
+# Python
+cursor.execute('SELECT * FROM users WHERE name = ?', (user_input,))
+
+# Node.js
+db.prepare('SELECT * FROM users WHERE name = ?').get(userInput);
+
+# Multiple parameters
+cursor.execute('''
+    SELECT * FROM users 
+    WHERE email = ? AND status = ?
+''', (email, status))</code></pre>
+            
+            <h3>Input Validation:</h3>
+            <pre><code># Python validation example
+def validate_email(email):
+    import re
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQLite Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #e8f4f8;
+            padding: 0;
+            margin: 0;
+            line-height: 1.4;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 12px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 15px;
+            }
+        }
+        
+        h1 {
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            margin: 0 0 8px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        
+        .section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 6px;
+            padding: 10px;
+            margin: 0 0 6px 0;
+            border-left: 2px solid #4fc3f7;
+            backdrop-filter: blur(10px);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        
+        .section h2 {
+            font-size: 1rem;
+            color: #4fc3f7;
+            margin: 0 0 6px 0;
+            word-wrap: break-word;
+        }
+        
+        .section h3 {
+            font-size: 0.9rem;
+            color: #81d4fa;
+            margin: 8px 0 4px 0;
+            word-wrap: break-word;
+        }
+        
+        .section p, .section li {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            margin: 4px 0;
+            font-size: 0.9rem;
+        }
+        
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            color: #a5d6a7;
+        }
+        
+        pre {
+            background: rgba(0,0,0,0.4);
+            padding: 8px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 4px 0;
+            border: 1px solid rgba(79,195,247,0.2);
+            max-width: 100%;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #a5d6a7;
+            font-size: 0.75em;
+            line-height: 1.3;
+            display: block;
+            white-space: pre;
+            word-wrap: normal;
+        }
+        
+        ul {
+            margin: 4px 0;
+            padding-left: 18px;
+        }
+        
+        li {
+            margin: 3px 0;
+            font-size: 0.9rem;
+        }
+        
+        .tip {
+            background: rgba(76,175,80,0.15);
+            border-left: 2px solid #4caf50;
+            padding: 8px;
+            margin: 4px 0;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .tip strong {
+            font-size: 0.9rem;
+        }
+        
+        .tip ul {
+            margin: 3px 0;
+        }
+        
+        .tip li {
+            margin: 2px 0;
+            font-size: 0.85rem;
+        }
+        
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(30,60,114,0.95);
+            padding: 6px;
+            border-radius: 6px;
+            margin: 0 0 8px 0;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        
+        .nav-btn {
+            background: rgba(79,195,247,0.2);
+            border: 1px solid #4fc3f7;
+            color: #4fc3f7;
+            padding: 4px 8px;
+            margin: 0;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+            background: rgba(79,195,247,0.3);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .nav-btn:hover {
+            background: rgba(79,195,247,0.3);
+            box-shadow: 0 2px 4px rgba(79,195,247,0.4);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Better mobile readability */
+        @media (max-width: 767px) {
+            .container {
+                padding: 6px;
+            }
+            
+            body {
+                font-size: 13px;
+            }
+            
+            h1 {
+                font-size: 1rem;
+                padding: 6px;
+                margin: 0 0 6px 0;
+            }
+            
+            .section {
+                padding: 8px;
+                margin: 0 0 5px 0;
+            }
+            
+            .section h2 {
+                font-size: 0.95rem;
+                margin: 0 0 5px 0;
+            }
+            
+            .section h3 {
+                font-size: 0.85rem;
+                margin: 6px 0 3px 0;
+            }
+            
+            .section p, .section li {
+                font-size: 0.85rem;
+            }
+            
+            pre {
+                padding: 6px;
+                margin: 3px 0;
+            }
+            
+            pre code {
+                font-size: 0.7em;
+                line-height: 1.2;
+            }
+            
+            .nav {
+                padding: 4px;
+                gap: 2px;
+                margin: 0 0 6px 0;
+            }
+            
+            .nav-btn {
+                font-size: 0.65rem;
+                padding: 3px 6px;
+            }
+            
+            .tip {
+                padding: 6px;
+                margin: 3px 0;
+            }
+            
+            .tip li {
+                font-size: 0.8rem;
+            }
+            
+            ul {
+                padding-left: 15px;
+            }
+            
+            li {
+                margin: 2px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SQLite Beginner's Guide</h1>
+        
+        <div class="nav">
+            <button class="nav-btn" onclick="showSection('intro')">Intro</button>
+            <button class="nav-btn" onclick="showSection('setup')">Setup</button>
+            <button class="nav-btn" onclick="showSection('basics')">Basics</button>
+            <button class="nav-btn" onclick="showSection('crud')">CRUD</button>
+            <button class="nav-btn" onclick="showSection('advanced')">Advanced</button>
+            <button class="nav-btn" onclick="showSection('constraints')">Constraints</button>
+            <button class="nav-btn" onclick="showSection('indexes')">Indexes</button>
+            <button class="nav-btn" onclick="showSection('transactions')">Transactions</button>
+            <button class="nav-btn" onclick="showSection('joins')">Joins Deep</button>
+            <button class="nav-btn" onclick="showSection('optimization')">Optimization</button>
+            <button class="nav-btn" onclick="showSection('datatypes')">Data Types</button>
+            <button class="nav-btn" onclick="showSection('errors')">Errors</button>
+            <button class="nav-btn" onclick="showSection('realworld')">Real World</button>
+            <button class="nav-btn" onclick="showSection('security')">Security</button>
+            <button class="nav-btn" onclick="showSection('migration')">Migration</button>
+            <button class="nav-btn" onclick="showSection('testing')">Testing</button>
+            <button class="nav-btn" onclick="showSection('mobile')">Mobile Apps</button>
+            <button class="nav-btn" onclick="showSection('backup')">Backup</button>
+            <button class="nav-btn" onclick="showSection('bestpractices')">Best Practices</button>
+            <button class="nav-btn" onclick="showSection('all')">Show All</button>
+        </div>
+        
+        <div id="intro" class="section">
+            <h2>📚 What is SQLite?</h2>
+            <p>SQLite is a lightweight, serverless, self-contained SQL database engine. Perfect for mobile apps, embedded systems, and small-to-medium websites.</p>
+            
+            <h3>Key Features:</h3>
+            <ul>
+                <li>Zero configuration - no setup required</li>
+                <li>Single file database</li>
+                <li>Cross-platform</li>
+                <li>ACID compliant</li>
+                <li>Public domain license</li>
+            </ul>
+        </div>
+        
+        <div id="setup" class="section">
+            <h2>⚙️ Getting Started</h2>
+            
+            <h3>Installation:</h3>
+            <pre><code># Python (built-in)
+import sqlite3
+
+# Node.js
+npm install better-sqlite3
+
+# Command line
+apt-get install sqlite3  # Linux
+brew install sqlite3      # Mac</code></pre>
+
+            <h3>Create Database:</h3>
+            <pre><code># Python
+conn = sqlite3.connect('mydb.db')
+
+# CLI
+sqlite3 mydb.db</code></pre>
+        </div>
+        
+        <div id="basics" class="section">
+            <h2>🔤 Basic Syntax</h2>
+            
+            <h3>Data Types:</h3>
+            <ul>
+                <li><code>INTEGER</code> - whole numbers</li>
+                <li><code>REAL</code> - floating point</li>
+                <li><code>TEXT</code> - strings</li>
+                <li><code>BLOB</code> - binary data</li>
+                <li><code>NULL</code> - null value</li>
+            </ul>
+            
+            <h3>Create Table:</h3>
+            <pre><code>CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE,
+    age INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+        </div>
+        
+        <div id="crud" class="section">
+            <h2>✏️ CRUD Operations</h2>
+            
+            <h3>INSERT:</h3>
+            <pre><code>INSERT INTO users (name, email, age) 
+VALUES ('John Doe', 'john@email.com', 25);
+
+-- Multiple rows
+INSERT INTO users (name, email) VALUES 
+('Alice', 'alice@email.com'),
+('Bob', 'bob@email.com');</code></pre>
+            
+            <h3>SELECT:</h3>
+            <pre><code>-- All columns
+SELECT * FROM users;
+
+-- Specific columns
+SELECT name, email FROM users;
+
+-- With conditions
+SELECT * FROM users WHERE age > 20;
+
+-- Sorting
+SELECT * FROM users ORDER BY name ASC;
+
+-- Limit
+SELECT * FROM users LIMIT 10;</code></pre>
+            
+            <h3>UPDATE:</h3>
+            <pre><code>UPDATE users 
+SET age = 26 
+WHERE name = 'John Doe';
+
+-- Multiple columns
+UPDATE users 
+SET age = 27, email = 'newemail@email.com'
+WHERE id = 1;</code></pre>
+            
+            <h3>DELETE:</h3>
+            <pre><code>DELETE FROM users WHERE id = 1;
+
+-- Delete all (careful!)
+DELETE FROM users;</code></pre>
+        </div>
+        
+        <div id="advanced" class="section">
+            <h2>🚀 Advanced Concepts</h2>
+            
+            <h3>WHERE Operators:</h3>
+            <pre><code>SELECT * FROM users WHERE age >= 18;
+SELECT * FROM users WHERE name LIKE 'J%';
+SELECT * FROM users WHERE age BETWEEN 20 AND 30;
+SELECT * FROM users WHERE email IN ('a@b.com', 'c@d.com');</code></pre>
+            
+            <h3>Joins:</h3>
+            <pre><code>-- INNER JOIN
+SELECT users.name, orders.product 
+FROM users 
+INNER JOIN orders ON users.id = orders.user_id;
+
+-- LEFT JOIN
+SELECT users.name, orders.product 
+FROM users 
+LEFT JOIN orders ON users.id = orders.user_id;</code></pre>
+            
+            <h3>Aggregates:</h3>
+            <pre><code>SELECT COUNT(*) FROM users;
+SELECT AVG(age) FROM users;
+SELECT MAX(age) FROM users;
+SELECT MIN(age) FROM users;
+SELECT SUM(price) FROM products;</code></pre>
+            
+            <h3>Group By:</h3>
+            <pre><code>SELECT country, COUNT(*) as user_count
+FROM users 
+GROUP BY country
+HAVING COUNT(*) > 5;</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Pro Tips:</strong>
+                <ul>
+                    <li>Always use prepared statements to prevent SQL injection</li>
+                    <li>Create indexes for faster queries: <code>CREATE INDEX idx_email ON users(email)</code></li>
+                    <li>Use transactions for multiple operations: <code>BEGIN; ... COMMIT;</code></li>
+                    <li>Regularly <code>VACUUM</code> to optimize database size</li>
+                </ul>
+            </div>
+            
+            <h3>Python Example:</h3>
+            <pre><code>import sqlite3
+
+# Connect
+conn = sqlite3.connect('mydb.db')
+cursor = conn.cursor()
+
+# Execute
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS tasks (
+        id INTEGER PRIMARY KEY,
+        task TEXT NOT NULL,
+        done INTEGER DEFAULT 0
+    )
+''')
+
+# Insert with parameters (safe!)
+cursor.execute('INSERT INTO tasks (task) VALUES (?)', ('Learn SQLite',))
+
+# Query
+cursor.execute('SELECT * FROM tasks')
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+# Commit and close
+conn.commit()
+conn.close()</code></pre>
+        </div>
+        
+        <div id="constraints" class="section">
+            <h2>🔒 Constraints</h2>
+            
+            <h3>Primary Key:</h3>
+            <pre><code>CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT
+);
+
+-- Composite primary key
+CREATE TABLE order_items (
+    order_id INTEGER,
+    product_id INTEGER,
+    quantity INTEGER,
+    PRIMARY KEY (order_id, product_id)
+);</code></pre>
+            
+            <h3>Foreign Key:</h3>
+            <pre><code>-- Enable foreign keys (off by default)
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    total REAL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);</code></pre>
+            
+            <h3>NOT NULL & UNIQUE:</h3>
+            <pre><code>CREATE TABLE accounts (
+    id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
+);</code></pre>
+            
+            <h3>CHECK Constraint:</h3>
+            <pre><code>CREATE TABLE products (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    price REAL CHECK(price > 0),
+    stock INTEGER CHECK(stock >= 0),
+    category TEXT CHECK(category IN ('Electronics', 'Books', 'Clothing'))
+);</code></pre>
+            
+            <h3>DEFAULT Values:</h3>
+            <pre><code>CREATE TABLE posts (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT,
+    status TEXT DEFAULT 'draft',
+    views INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Constraint Tips:</strong>
+                <ul>
+                    <li>Foreign keys are NOT enforced by default - always run <code>PRAGMA foreign_keys = ON</code></li>
+                    <li>Use CHECK constraints for data validation at database level</li>
+                    <li>AUTOINCREMENT uses more CPU - only use when you need guaranteed unique IDs</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="indexes" class="section">
+            <h2>⚡ Indexes & Performance</h2>
+            
+            <h3>Create Indexes:</h3>
+            <pre><code>-- Single column index
+CREATE INDEX idx_users_email ON users(email);
+
+-- Multi-column index
+CREATE INDEX idx_orders_user_date ON orders(user_id, order_date);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_username ON users(username);
+
+-- Partial index (conditional)
+CREATE INDEX idx_active_users ON users(email) 
+WHERE status = 'active';</code></pre>
+            
+            <h3>View Indexes:</h3>
+            <pre><code>-- List all indexes
+SELECT name FROM sqlite_master 
+WHERE type = 'index';
+
+-- Indexes for specific table
+PRAGMA index_list('users');
+
+-- Index details
+PRAGMA index_info('idx_users_email');</code></pre>
+            
+            <h3>Drop Index:</h3>
+            <pre><code>DROP INDEX IF EXISTS idx_users_email;</code></pre>
+            
+            <h3>Query Performance:</h3>
+            <pre><code>-- Explain query plan
+EXPLAIN QUERY PLAN 
+SELECT * FROM users WHERE email = 'test@email.com';
+
+-- Analyze database
+ANALYZE;</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Index Tips:</strong>
+                <ul>
+                    <li>Index columns used in WHERE, JOIN, ORDER BY clauses</li>
+                    <li>Don't over-index - each index slows down INSERT/UPDATE</li>
+                    <li>Indexes on small tables (<1000 rows) may not help</li>
+                    <li>Multi-column indexes: put most selective column first</li>
+                    <li>Use partial indexes for frequently filtered subsets</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="transactions" class="section">
+            <h2>💾 Transactions & Concurrency</h2>
+            
+            <h3>Basic Transaction:</h3>
+            <pre><code>BEGIN TRANSACTION;
+
+INSERT INTO accounts (username, balance) 
+VALUES ('alice', 1000);
+
+UPDATE accounts 
+SET balance = balance - 100 
+WHERE username = 'alice';
+
+INSERT INTO transactions (from_user, amount) 
+VALUES ('alice', 100);
+
+COMMIT;  -- or ROLLBACK; to undo</code></pre>
+            
+            <h3>Transaction Types:</h3>
+            <pre><code>-- Deferred (default) - locks when needed
+BEGIN DEFERRED TRANSACTION;
+
+-- Immediate - write lock immediately
+BEGIN IMMEDIATE TRANSACTION;
+
+-- Exclusive - blocks all other connections
+BEGIN EXCLUSIVE TRANSACTION;</code></pre>
+            
+            <h3>Savepoints:</h3>
+            <pre><code>BEGIN TRANSACTION;
+
+INSERT INTO users (name) VALUES ('John');
+SAVEPOINT sp1;
+
+INSERT INTO users (name) VALUES ('Jane');
+SAVEPOINT sp2;
+
+-- Rollback to sp2, keeps John
+ROLLBACK TO SAVEPOINT sp2;
+
+COMMIT;</code></pre>
+            
+            <h3>Python Transaction Example:</h3>
+            <pre><code>import sqlite3
+
+conn = sqlite3.connect('bank.db')
+conn.execute('PRAGMA foreign_keys = ON')
+
+try:
+    cursor = conn.cursor()
+    
+    # Transfer money
+    cursor.execute('''
+        UPDATE accounts 
+        SET balance = balance - 100 
+        WHERE id = 1
+    ''')
+    
+    cursor.execute('''
+        UPDATE accounts 
+        SET balance = balance + 100 
+        WHERE id = 2
+    ''')
+    
+    conn.commit()
+    print("Transfer successful")
+    
+except sqlite3.Error as e:
+    conn.rollback()
+    print(f"Error: {e}")
+    
+finally:
+    conn.close()</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Transaction Tips:</strong>
+                <ul>
+                    <li>Always use transactions for multiple related operations</li>
+                    <li>Batch inserts in transactions - 100x faster than individual commits</li>
+                    <li>Keep transactions short to avoid locking issues</li>
+                    <li>Use IMMEDIATE for write-heavy operations</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="joins" class="section">
+            <h2>🔗 Advanced Joins & Relationships</h2>
+            
+            <h3>INNER JOIN Explained:</h3>
+            <pre><code>-- Returns only matching rows from both tables
+SELECT 
+    users.name,
+    orders.order_date,
+    orders.total
+FROM users
+INNER JOIN orders ON users.id = orders.user_id;</code></pre>
+            
+            <h3>LEFT JOIN (LEFT OUTER JOIN):</h3>
+            <pre><code>-- Returns all users, even those without orders
+SELECT 
+    users.name,
+    COUNT(orders.id) as order_count,
+    IFNULL(SUM(orders.total), 0) as total_spent
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id
+GROUP BY users.id;</code></pre>
+            
+            <h3>RIGHT JOIN Alternative:</h3>
+            <pre><code>-- SQLite doesn't have RIGHT JOIN, use LEFT JOIN instead
+-- RIGHT JOIN equivalent:
+SELECT * FROM orders
+LEFT JOIN users ON orders.user_id = users.id;</code></pre>
+            
+            <h3>CROSS JOIN (Cartesian Product):</h3>
+            <pre><code>-- Every combination of rows
+SELECT 
+    colors.name as color,
+    sizes.name as size
+FROM colors
+CROSS JOIN sizes;
+
+-- Useful for generating date ranges
+SELECT DATE('2024-01-01', '+' || n || ' days') as date
+FROM (
+    SELECT 0 as n UNION SELECT 1 UNION SELECT 2
+    UNION SELECT 3 UNION SELECT 4
+);</code></pre>
+            
+            <h3>Self JOIN:</h3>
+            <pre><code>-- Find employees and their managers
+SELECT 
+    e.name as employee,
+    m.name as manager
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.id;
+
+-- Find users from same city
+SELECT 
+    u1.name as user1,
+    u2.name as user2,
+    u1.city
+FROM users u1
+INNER JOIN users u2 
+    ON u1.city = u2.city 
+    AND u1.id < u2.id;</code></pre>
+            
+            <h3>Multiple JOINs:</h3>
+            <pre><code>SELECT 
+    customers.name,
+    orders.order_date,
+    products.name as product,
+    order_items.quantity,
+    order_items.price
+FROM customers
+INNER JOIN orders ON customers.id = orders.customer_id
+INNER JOIN order_items ON orders.id = order_items.order_id
+INNER JOIN products ON order_items.product_id = products.id
+WHERE orders.order_date > DATE('now', '-30 days');</code></pre>
+            
+            <h3>JOIN with Aggregates:</h3>
+            <pre><code>-- Users with their stats
+SELECT 
+    users.name,
+    COUNT(DISTINCT orders.id) as total_orders,
+    COUNT(DISTINCT posts.id) as total_posts,
+    MAX(orders.order_date) as last_order
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id
+LEFT JOIN posts ON users.id = posts.author_id
+GROUP BY users.id
+HAVING total_orders > 5;</code></pre>
+            
+            <div class="tip">
+                <strong>💡 JOIN Tips:</strong>
+                <ul>
+                    <li>INNER JOIN = only matching rows (intersection)</li>
+                    <li>LEFT JOIN = all left table + matches from right</li>
+                    <li>Use table aliases (u, o, p) for readability</li>
+                    <li>Index foreign key columns for faster joins</li>
+                    <li>EXPLAIN QUERY PLAN to check join performance</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="optimization" class="section">
+            <h2>🚀 Query Optimization Techniques</h2>
+            
+            <h3>Query Analysis:</h3>
+            <pre><code>-- See how SQLite executes query
+EXPLAIN QUERY PLAN
+SELECT * FROM users WHERE email = 'test@test.com';
+
+-- Look for "SCAN TABLE" (bad) vs "SEARCH TABLE" (good)
+-- Example output:
+-- SCAN TABLE users = no index, slow
+-- SEARCH TABLE users USING INDEX = fast</code></pre>
+            
+            <h3>Optimization Strategies:</h3>
+            <pre><code>-- ❌ BAD: Selecting all columns
+SELECT * FROM orders WHERE user_id = 5;
+
+-- ✅ GOOD: Only needed columns
+SELECT id, total, order_date FROM orders WHERE user_id = 5;
+
+-- ❌ BAD: Function on indexed column
+SELECT * FROM users WHERE UPPER(email) = 'TEST@TEST.COM';
+
+-- ✅ GOOD: Index-friendly query
+SELECT * FROM users WHERE email = 'test@test.com';
+
+-- ❌ BAD: OR conditions prevent index usage
+SELECT * FROM products WHERE name = 'Phone' OR category = 'Electronics';
+
+-- ✅ GOOD: Use UNION or IN
+SELECT * FROM products WHERE name = 'Phone'
+UNION
+SELECT * FROM products WHERE category = 'Electronics';</code></pre>
+            
+            <h3>Covering Indexes:</h3>
+            <pre><code>-- Index that contains all needed columns
+CREATE INDEX idx_user_email_name ON users(email, name);
+
+-- Query uses only indexed columns (no table lookup)
+SELECT name FROM users WHERE email = 'test@test.com';</code></pre>
+            
+            <h3>Query Optimization Settings:</h3>
+            <pre><code>-- Increase cache for better performance
+PRAGMA cache_size = -64000;  -- 64MB
+
+-- Use WAL mode for concurrent reads
+PRAGMA journal_mode = WAL;
+
+-- Analyze database statistics
+ANALYZE;
+
+-- Update outdated statistics
+ANALYZE users;
+
+-- Memory settings
+PRAGMA temp_store = MEMORY;
+PRAGMA mmap_size = 268435456;  -- 256MB memory-mapped I/O</code></pre>
+            
+            <h3>Batch Operations:</h3>
+            <pre><code>-- ❌ SLOW: Individual inserts
+INSERT INTO logs (message) VALUES ('msg1');
+INSERT INTO logs (message) VALUES ('msg2');
+-- ... 1000 times
+
+-- ✅ FAST: Transaction batch
+BEGIN TRANSACTION;
+INSERT INTO logs (message) VALUES ('msg1');
+INSERT INTO logs (message) VALUES ('msg2');
+-- ... 1000 times
+COMMIT;
+
+-- ✅ FASTER: Multi-row insert
+INSERT INTO logs (message) VALUES 
+('msg1'), ('msg2'), ('msg3'), ('msg4');
+
+-- Python bulk insert
+data = [('msg1',), ('msg2',), ('msg3',)]
+cursor.executemany('INSERT INTO logs (message) VALUES (?)', data)</code></pre>
+            
+            <h3>Pagination Best Practices:</h3>
+            <pre><code>-- ❌ SLOW for large offsets
+SELECT * FROM posts ORDER BY created_at DESC LIMIT 10 OFFSET 10000;
+
+-- ✅ FAST: Keyset pagination
+SELECT * FROM posts 
+WHERE created_at < '2024-01-01 12:00:00'
+ORDER BY created_at DESC 
+LIMIT 10;
+
+-- With cursor-based pagination
+SELECT * FROM posts 
+WHERE id < 12345
+ORDER BY id DESC 
+LIMIT 10;</code></pre>
+            
+            <div class="tip">
+                <strong>⚡ Performance Checklist:</strong>
+                <ul>
+                    <li>✓ Use indexes on WHERE/JOIN/ORDER BY columns</li>
+                    <li>✓ SELECT only needed columns, not *</li>
+                    <li>✓ Batch operations in transactions</li>
+                    <li>✓ Use prepared statements</li>
+                    <li>✓ Enable WAL mode for concurrency</li>
+                    <li>✓ Run ANALYZE periodically</li>
+                    <li>✓ Avoid functions on indexed columns</li>
+                    <li>✓ Use LIMIT when possible</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="datatypes" class="section">
+            <h2>📊 Data Types Deep Dive</h2>
+            
+            <h3>Type Affinity:</h3>
+            <pre><code>-- SQLite uses type affinity (flexible typing)
+CREATE TABLE flexible (
+    id INTEGER,      -- Prefers integers
+    price REAL,      -- Prefers floating point
+    name TEXT,       -- Prefers text
+    data BLOB,       -- Prefers binary
+    mixed NUMERIC    -- Tries to convert to number
+);
+
+-- You can store any type in any column!
+INSERT INTO flexible VALUES (
+    123,          -- INTEGER
+    19.99,        -- REAL
+    'Product',    -- TEXT
+    X'89504E47',  -- BLOB (hex notation)
+    '456'         -- Stored as INTEGER in NUMERIC column
+);</code></pre>
+            
+            <h3>Boolean Values:</h3>
+            <pre><code>-- No native boolean, use INTEGER
+CREATE TABLE settings (
+    id INTEGER PRIMARY KEY,
+    is_active INTEGER DEFAULT 1,  -- 0 = false, 1 = true
+    is_verified INTEGER CHECK(is_verified IN (0, 1))
+);
+
+-- Query booleans
+SELECT * FROM settings WHERE is_active = 1;
+SELECT * FROM settings WHERE is_verified;</code></pre>
+            
+            <h3>Date & Time Storage:</h3>
+            <pre><code>-- Store as TEXT (ISO8601)
+CREATE TABLE events (
+    id INTEGER PRIMARY KEY,
+    event_date TEXT,  -- '2024-12-09'
+    event_time TEXT,  -- '14:30:00'
+    event_datetime TEXT  -- '2024-12-09 14:30:00'
+);
+
+-- Store as INTEGER (Unix timestamp)
+CREATE TABLE logs (
+    id INTEGER PRIMARY KEY,
+    created_at INTEGER DEFAULT (strftime('%s', 'now'))
+);
+
+-- Store as REAL (Julian day)
+CREATE TABLE appointments (
+    id INTEGER PRIMARY KEY,
+    appointment REAL DEFAULT (julianday('now'))
+);
+
+-- Query date comparisons
+SELECT * FROM events 
+WHERE DATE(event_date) BETWEEN '2024-01-01' AND '2024-12-31';
+
+SELECT * FROM logs 
+WHERE created_at > strftime('%s', 'now', '-7 days');</code></pre>
+            
+            <h3>JSON in SQLite:</h3>
+            <pre><code>-- Store JSON as TEXT
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    metadata TEXT  -- JSON data
+);
+
+INSERT INTO products (name, metadata) VALUES 
+('Laptop', '{"brand": "Apple", "specs": {"ram": 16, "storage": 512}}');
+
+-- JSON functions (SQLite 3.38+)
+SELECT 
+    name,
+    json_extract(metadata, '$.brand') as brand,
+    json_extract(metadata, '$.specs.ram') as ram
+FROM products;
+
+-- Query JSON
+SELECT * FROM products 
+WHERE json_extract(metadata, '$.brand') = 'Apple';
+
+-- Validate JSON
+SELECT * FROM products 
+WHERE json_valid(metadata);</code></pre>
+            
+            <h3>BLOB Operations:</h3>
+            <pre><code>-- Store binary data
+CREATE TABLE files (
+    id INTEGER PRIMARY KEY,
+    filename TEXT,
+    content BLOB,
+    size INTEGER
+);
+
+-- Python: Store file
+with open('image.png', 'rb') as f:
+    blob_data = f.read()
+    cursor.execute(
+        'INSERT INTO files (filename, content) VALUES (?, ?)',
+        ('image.png', blob_data)
+    )
+
+-- Retrieve file
+cursor.execute('SELECT content FROM files WHERE filename = ?', ('image.png',))
+blob = cursor.fetchone()[0]
+with open('output.png', 'wb') as f:
+    f.write(blob)</code></pre>
+            
+            <h3>Type Conversion Functions:</h3>
+            <pre><code>-- CAST
+SELECT CAST(price AS INTEGER) FROM products;
+SELECT CAST('123' AS INTEGER);
+SELECT CAST('2024-01-01' AS DATE);
+
+-- TYPEOF
+SELECT 
+    value,
+    TYPEOF(value) as type
+FROM mixed_table;
+
+-- Output: 'integer', 'real', 'text', 'blob', 'null'</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Data Type Tips:</strong>
+                <ul>
+                    <li>Use INTEGER for IDs, booleans, timestamps</li>
+                    <li>Use REAL for decimals, scientific data</li>
+                    <li>Use TEXT for strings, dates, JSON</li>
+                    <li>Use BLOB for binary files, images</li>
+                    <li>Store dates as TEXT (ISO8601) for readability</li>
+                    <li>Store prices as INTEGER (cents) to avoid rounding errors</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="errors" class="section">
+            <h2>🐛 Error Handling & Debugging</h2>
+            
+            <h3>Common Errors & Solutions:</h3>
+            <pre><code>-- ERROR: table already exists
+-- SOLUTION: Use IF NOT EXISTS
+CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY);
+
+-- ERROR: no such table
+-- SOLUTION: Check table name, create table first
+.tables  -- CLI: list all tables
+
+-- ERROR: UNIQUE constraint failed
+-- SOLUTION: Check for duplicates, use INSERT OR IGNORE
+INSERT OR IGNORE INTO users (email) VALUES ('test@test.com');
+INSERT OR REPLACE INTO users (id, email) VALUES (1, 'new@test.com');
+
+-- ERROR: NOT NULL constraint failed
+-- SOLUTION: Provide all required fields or set DEFAULT
+INSERT INTO users (name) VALUES ('John');  -- if email NOT NULL, this fails
+
+-- ERROR: FOREIGN KEY constraint failed
+-- SOLUTION: Enable foreign keys, ensure referenced row exists
+PRAGMA foreign_keys = ON;
+INSERT INTO orders (user_id) VALUES (999);  -- fails if user 999 doesn't exist</code></pre>
+            
+            <h3>INSERT Conflict Resolution:</h3>
+            <pre><code>-- REPLACE: delete old, insert new
+INSERT OR REPLACE INTO settings (key, value) 
+VALUES ('theme', 'dark');
+
+-- IGNORE: skip if exists
+INSERT OR IGNORE INTO users (email) VALUES ('test@test.com');
+
+-- ABORT: stop transaction (default)
+-- FAIL: continue transaction, return error
+-- ROLLBACK: rollback entire transaction
+
+-- ON CONFLICT clause (modern syntax)
+INSERT INTO users (id, name, email) 
+VALUES (1, 'John', 'john@test.com')
+ON CONFLICT(id) DO UPDATE SET 
+    name = excluded.name,
+    email = excluded.email;</code></pre>
+            
+            <h3>Python Error Handling:</h3>
+            <pre><code>import sqlite3
+
+try:
+    conn = sqlite3.connect('mydb.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('INSERT INTO users (email) VALUES (?)', ('test@test.com',))
+    conn.commit()
+    
+except sqlite3.IntegrityError as e:
+    print(f"Integrity error: {e}")  # UNIQUE/NOT NULL/FK violation
+    conn.rollback()
+    
+except sqlite3.OperationalError as e:
+    print(f"Operational error: {e}")  # Table doesn't exist, locked, etc
+    
+except sqlite3.DatabaseError as e:
+    print(f"Database error: {e}")  # General DB error
+    
+finally:
+    if conn:
+        conn.close()</code></pre>
+            
+            <h3>Debugging Queries:</h3>
+            <pre><code>-- Check table structure
+PRAGMA table_info('users');
+
+-- Check indexes
+PRAGMA index_list('users');
+
+-- Check foreign keys
+PRAGMA foreign_key_list('orders');
+
+-- Check for foreign key violations
+PRAGMA foreign_key_check;
+PRAGMA foreign_key_check('orders');
+
+-- Database integrity
+PRAGMA integrity_check;
+
+-- Quick check
+PRAGMA quick_check;
+
+-- Show query plan
+EXPLAIN SELECT * FROM users WHERE email = 'test@test.com';
+EXPLAIN QUERY PLAN SELECT * FROM users WHERE email = 'test@test.com';</code></pre>
+            
+            <h3>Locking & Concurrency Issues:</h3>
+            <pre><code>-- ERROR: database is locked
+-- SOLUTION: Set timeout, use WAL mode
+
+-- Python: Set busy timeout
+conn = sqlite3.connect('mydb.db', timeout=10.0)
+
+-- Enable WAL for better concurrency
+PRAGMA journal_mode = WAL;
+
+-- Check current locks
+PRAGMA locking_mode;
+
+-- Reset database if corrupted
+-- CLI: sqlite3 mydb.db "PRAGMA integrity_check"
+-- If failed: restore from backup</code></pre>
+            
+            <h3>Common Mistakes:</h3>
+            <pre><code>-- ❌ Forgetting to commit
+conn = sqlite3.connect('mydb.db')
+cursor.execute('INSERT INTO users...')
+# conn.commit()  -- MISSING! Data not saved
+conn.close()
+
+-- ✅ Always commit or use context manager
+with sqlite3.connect('mydb.db') as conn:
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO users...')
+    # Auto-commits on exit
+
+-- ❌ Not closing connections
+conn = sqlite3.connect('mydb.db')
+# ... do work
+# conn.close()  -- MISSING! Resource leak
+
+-- ✅ Use context manager or try/finally
+try:
+    conn = sqlite3.connect('mydb.db')
+    # ... do work
+finally:
+    conn.close()</code></pre>
+            
+            <div class="tip">
+                <strong>🔍 Debugging Checklist:</strong>
+                <ul>
+                    <li>✓ Check PRAGMA integrity_check</li>
+                    <li>✓ Use EXPLAIN QUERY PLAN</li>
+                    <li>✓ Enable foreign keys: PRAGMA foreign_keys = ON</li>
+                    <li>✓ Set timeout for busy database</li>
+                    <li>✓ Use WAL mode for concurrency</li>
+                    <li>✓ Always commit or rollback transactions</li>
+                    <li>✓ Close connections properly</li>
+                    <li>✓ Check table/column names (case-sensitive)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="realworld" class="section">
+            <h2>🌍 Real-World Examples</h2>
+            
+            <h3>E-Commerce Schema:</h3>
+            <pre><code>-- Complete e-commerce database
+CREATE TABLE customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    phone TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sku TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    price REAL NOT NULL CHECK(price > 0),
+    stock INTEGER DEFAULT 0 CHECK(stock >= 0),
+    category TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'paid', 'shipped', 'delivered', 'cancelled')),
+    total REAL DEFAULT 0,
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+CREATE TABLE order_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL CHECK(quantity > 0),
+    price REAL NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Indexes for performance
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+CREATE INDEX idx_orders_date ON orders(order_date);
+CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_products_category ON products(category);</code></pre>
+            
+            <h3>Blog/CMS Schema:</h3>
+            <pre><code>CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT DEFAULT 'user' CHECK(role IN ('admin', 'editor', 'user')),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    content TEXT NOT NULL,
+    excerpt TEXT,
+    status TEXT DEFAULT 'draft' CHECK(status IN ('draft', 'published', 'archived')),
+    views INTEGER DEFAULT 0,
+    published_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    post_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    approved INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE tags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    slug TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE post_tags (
+    post_id INTEGER NOT NULL,
+    tag_id INTEGER NOT NULL,
+    PRIMARY KEY (post_id, tag_id),
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
+
+-- Full-text search (FTS5)
+CREATE VIRTUAL TABLE posts_fts USING fts5(
+    title, content, content='posts', content_rowid='id'
+);
+
+-- Trigger to keep FTS in sync
+CREATE TRIGGER posts_ai AFTER INSERT ON posts BEGIN
+    INSERT INTO posts_fts(rowid, title, content) 
+    VALUES (new.id, new.title, new.content);
+END;</code></pre>
+            
+            <h3>Analytics Queries:</h3>
+            <pre><code>-- Top 10 customers by revenue
+SELECT 
+    c.name,
+    c.email,
+    COUNT(o.id) as order_count,
+    SUM(o.total) as total_spent
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id
+ORDER BY total_spent DESC
+LIMIT 10;
+
+-- Monthly sales report
+SELECT 
+    strftime('%Y-%m', order_date) as month,
+    COUNT(*) as orders,
+    SUM(total) as revenue,
+    AVG(total) as avg_order_value
+FROM orders
+WHERE status IN ('paid', 'shipped', 'delivered')
+GROUP BY month
+ORDER BY month DESC;
+
+-- Product performance
+SELECT 
+    p.name,
+    p.category,
+    COUNT(oi.id) as times_ordered,
+    SUM(oi.quantity) as units_sold,
+    SUM(oi.quantity * oi.price) as revenue
+FROM products p
+LEFT JOIN order_items oi ON p.id = oi.product_id
+GROUP BY p.id
+ORDER BY revenue DESC
+LIMIT 20;
+
+-- Customer lifetime value
+SELECT 
+    c.email,
+    COUNT(o.id) as total_orders,
+    SUM(o.total) as lifetime_value,
+    MIN(o.order_date) as first_order,
+    MAX(o.order_date) as last_order,
+    julianday(MAX(o.order_date)) - julianday(MIN(o.order_date)) as days_as_customer
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id
+HAVING total_orders > 1
+ORDER BY lifetime_value DESC;</code></pre>
+            
+            <h3>Task Management App:</h3>
+            <pre><code>CREATE TABLE projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'active',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    priority TEXT DEFAULT 'medium' CHECK(priority IN ('low', 'medium', 'high', 'urgent')),
+    status TEXT DEFAULT 'todo' CHECK(status IN ('todo', 'in_progress', 'review', 'done')),
+    due_date DATE,
+    completed_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
+-- View: Overdue tasks
+CREATE VIEW overdue_tasks AS
+SELECT 
+    t.id,
+    t.title,
+    t.priority,
+    p.name as project,
+    t.due_date,
+    julianday('now') - julianday(t.due_date) as days_overdue
+FROM tasks t
+JOIN projects p ON t.project_id = p.id
+WHERE t.status != 'done' 
+  AND t.due_date < DATE('now')
+ORDER BY days_overdue DESC;
+
+-- Query: Task statistics
+SELECT 
+    p.name as project,
+    COUNT(CASE WHEN t.status = 'done' THEN 1 END) as completed,
+    COUNT(CASE WHEN t.status != 'done' THEN 1 END) as pending,
+    COUNT(CASE WHEN t.due_date < DATE('now') AND t.status != 'done' THEN 1 END) as overdue
+FROM projects p
+LEFT JOIN tasks t ON p.id = t.project_id
+WHERE p.status = 'active'
+GROUP BY p.id;</code></pre>
+            
+            <div class="tip">
+                <strong>🎯 Schema Design Tips:</strong>
+                <ul>
+                    <li>Use INTEGER PRIMARY KEY for auto-incrementing IDs</li>
+                    <li>Add indexes on foreign keys and frequently queried columns</li>
+                    <li>Use CHECK constraints for enum-like values</li>
+                    <li>Always use ON DELETE CASCADE for child records</li>
+                    <li>Add created_at/updated_at timestamps</li>
+                    <li>Use views for complex recurring queries</li>
+                    <li>Consider FTS5 for full-text search needs</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="bestpractices" class="section">
+            <h2>✨ Best Practices & Tips</h2>
+            
+            <h3>Security - Prevent SQL Injection:</h3>
+            <pre><code>-- ❌ NEVER DO THIS (vulnerable!)
+query = f"SELECT * FROM users WHERE name = '{user_input}'"
+
+-- ✅ ALWAYS USE PARAMETERIZED QUERIES
+# Python
+cursor.execute('SELECT * FROM users WHERE name = ?', (user_input,))
+
+# Node.js
+db.prepare('SELECT * FROM users WHERE name = ?').get(userInput);
+
+# Multiple parameters
+cursor.execute('''
+    INSERT INTO users (name, email, age) 
+    VALUES (?, ?, ?)
+''', (name, email, age))</code></pre>
+            
+            <h3>Database Optimization:</h3>
+            <pre><code>-- Check database integrity
+PRAGMA integrity_check;
+
+-- Optimize database file size
+VACUUM;
+
+-- Set cache size (in pages, -KB for KB)
+PRAGMA cache_size = -10000;  -- 10MB
+
+-- Set journal mode
+PRAGMA journal_mode = WAL;  -- Better concurrency
+
+-- Set synchronous mode
+PRAGMA synchronous = NORMAL;  -- Balance safety/speed</code></pre>
+            
+            <h3>Useful PRAGMAs:</h3>
+            <pre><code>-- Database info
+PRAGMA database_list;
+PRAGMA table_info('users');
+
+-- Foreign keys
+PRAGMA foreign_keys = ON;
+PRAGMA foreign_key_check;
+
+-- Auto vacuum
+PRAGMA auto_vacuum = FULL;
+
+-- Temp store in memory
+PRAGMA temp_store = MEMORY;</code></pre>
+            
+            <h3>String Functions:</h3>
+            <pre><code>-- Case conversion
+SELECT UPPER(name), LOWER(email) FROM users;
+
+-- Substring
+SELECT SUBSTR(name, 1, 3) FROM users;
+
+-- Concatenation
+SELECT name || ' - ' || email FROM users;
+
+-- Trim
+SELECT TRIM(name) FROM users;
+
+-- Replace
+SELECT REPLACE(email, '@', ' at ') FROM users;
+
+-- Length
+SELECT LENGTH(name) FROM users WHERE LENGTH(name) > 5;</code></pre>
+            
+            <h3>Date/Time Functions:</h3>
+            <pre><code>-- Current date/time
+SELECT DATE('now');
+SELECT DATETIME('now');
+SELECT TIME('now');
+
+-- Date arithmetic
+SELECT DATE('now', '+7 days');
+SELECT DATE('now', '-1 month');
+SELECT DATE('now', 'start of year');
+
+-- Format dates
+SELECT STRFTIME('%Y-%m-%d', created_at) FROM posts;
+SELECT STRFTIME('%H:%M', created_at) FROM posts;
+
+-- Date comparison
+SELECT * FROM orders 
+WHERE DATE(order_date) = DATE('now');</code></pre>
+            
+            <h3>Math Functions:</h3>
+            <pre><code>SELECT ABS(-15);           -- 15
+SELECT ROUND(3.14159, 2);  -- 3.14
+SELECT MAX(price, discount) FROM products;
+SELECT MIN(price, discount) FROM products;
+SELECT RANDOM();           -- Random number</code></pre>
+            
+            <h3>Conditional Logic:</h3>
+            <pre><code>-- CASE statement
+SELECT name,
+    CASE 
+        WHEN age < 18 THEN 'Minor'
+        WHEN age < 65 THEN 'Adult'
+        ELSE 'Senior'
+    END AS age_group
+FROM users;
+
+-- IFNULL
+SELECT name, IFNULL(phone, 'No phone') FROM users;
+
+-- COALESCE (first non-null)
+SELECT COALESCE(nickname, username, email) FROM users;</code></pre>
+            
+            <h3>Subqueries:</h3>
+            <pre><code>-- Subquery in WHERE
+SELECT name FROM users 
+WHERE id IN (SELECT user_id FROM orders WHERE total > 100);
+
+-- Subquery in SELECT
+SELECT name, 
+    (SELECT COUNT(*) FROM orders WHERE user_id = users.id) AS order_count
+FROM users;
+
+-- Subquery in FROM
+SELECT AVG(order_count) FROM (
+    SELECT COUNT(*) AS order_count 
+    FROM orders 
+    GROUP BY user_id
+);</code></pre>
+            
+            <h3>Views:</h3>
+            <pre><code>-- Create view
+CREATE VIEW active_users AS
+SELECT id, name, email 
+FROM users 
+WHERE status = 'active';
+
+-- Query view
+SELECT * FROM active_users;
+
+-- Drop view
+DROP VIEW IF EXISTS active_users;</code></pre>
+            
+            <h3>Triggers:</h3>
+            <pre><code>-- Auto-update timestamp
+CREATE TRIGGER update_timestamp 
+AFTER UPDATE ON posts
+BEGIN
+    UPDATE posts 
+    SET updated_at = CURRENT_TIMESTAMP 
+    WHERE id = NEW.id;
+END;
+
+-- Audit trail
+CREATE TRIGGER log_deletions
+BEFORE DELETE ON users
+BEGIN
+    INSERT INTO audit_log (action, user_id, timestamp)
+    VALUES ('DELETE', OLD.id, CURRENT_TIMESTAMP);
+END;</code></pre>
+            
+            <h3>Backup & Export:</h3>
+            <pre><code>-- Backup database (CLI)
+sqlite3 mydb.db ".backup backup.db"
+
+-- Export to SQL
+sqlite3 mydb.db ".dump" > backup.sql
+
+-- Export to CSV
+sqlite3 mydb.db -header -csv "SELECT * FROM users;" > users.csv
+
+-- Import from SQL
+sqlite3 mydb.db < backup.sql</code></pre>
+            
+            <div class="tip">
+                <strong>🎯 Performance Best Practices:</strong>
+                <ul>
+                    <li>Use WAL mode for better concurrency: <code>PRAGMA journal_mode = WAL</code></li>
+                    <li>Batch inserts in transactions (1000x faster)</li>
+                    <li>Use prepared statements and reuse them</li>
+                    <li>Limit SELECT * - only fetch columns you need</li>
+                    <li>Use LIMIT when you don't need all results</li>
+                    <li>Index foreign keys and frequently searched columns</li>
+                    <li>Run VACUUM periodically to reclaim space</li>
+                    <li>Keep database under 1GB for best performance</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <strong>⚠️ Common Mistakes to Avoid:</strong>
+                <ul>
+                    <li>Forgetting to enable foreign keys</li>
+                    <li>Not using parameterized queries (SQL injection risk)</li>
+                    <li>Forgetting to commit transactions</li>
+                    <li>Using TEXT for numbers (affects sorting)</li>
+                    <li>Not closing database connections</li>
+                    <li>Over-indexing (slows writes)</li>
+                    <li>Storing large files in database (use file system)</li>
+                </ul>
+            </div>
+            
+            <h3>Node.js Complete Example:</h3>
+            <pre><code>const Database = require('better-sqlite3');
+const db = new Database('myapp.db');
+
+// Enable WAL mode
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
+// Create table
+db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+`);
+
+// Prepared statement (reusable, fast)
+const insert = db.prepare(`
+    INSERT INTO users (name, email) 
+    VALUES (?, ?)
+`);
+
+// Transaction for bulk insert
+const insertMany = db.transaction((users) => {
+    for (const user of users) {
+        insert.run(user.name, user.email);
+    }
+});
+
+// Use it
+insertMany([
+    { name: 'Alice', email: 'alice@test.com' },
+    { name: 'Bob', email: 'bob@test.com' }
+]);
+
+// Query
+const users = db.prepare('SELECT * FROM users').all();
+console.log(users);
+
+// Close
+db.close();</code></pre>
+        </div>
+    </div>
+    
+    <script>
+        function showSection(section) {
+            const sections = ['intro', 'setup', 'basics', 'crud', 'advanced', 'constraints', 'indexes', 'transactions', 'joins', 'optimization', 'datatypes', 'errors', 'realworld', 'security', 'migration', 'testing', 'mobile', 'backup', 'bestpractices'];
+            
+            if (section === 'all') {
+                sections.forEach(s => {
+                    document.getElementById(s).classList.remove('hidden');
+                });
+            } else {
+                sections.forEach(s => {
+                    if (s === section) {
+                        document.getElementById(s).classList.remove('hidden');
+                    } else {
+                        document.getElementById(s).classList.add('hidden');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+    return re.match(pattern, email) is not None
+
+def safe_insert_user(email, name):
+    if not validate_email(email):
+        raise ValueError("Invalid email")
+    
+    if len(name) > 100:
+        raise ValueError("Name too long")
+    
+    # Use CHECK constraints as second layer
+    cursor.execute('''
+        INSERT INTO users (email, name) 
+        VALUES (?, ?)
+    ''', (email, name))</code></pre>
+            
+            <h3>Password Security:</h3>
+            <pre><code># NEVER store plain text passwords!
+# ❌ BAD
+INSERT INTO users (password) VALUES ('mypassword123');
+
+# ✅ GOOD: Hash passwords
+import hashlib
+import secrets
+
+def hash_password(password):
+    # Generate salt
+    salt = secrets.token_hex(16)
+    
+    # Hash with salt
+    pwd_hash = hashlib.pbkdf2_hmac(
+        'sha256',
+        password.encode('utf-8'),
+        salt.encode('utf-8'),
+        100000  # iterations
+    )
+    
+    return salt + pwd_hash.hex()
+
+def verify_password(stored_password, provided_password):
+    salt = stored_password[:32]
+    stored_hash = stored_password[32:]
+    
+    pwd_hash = hashlib.pbkdf2_hmac(
+        'sha256',
+        provided_password.encode('utf-8'),
+        salt.encode('utf-8'),
+        100000
+    )
+    
+    return pwd_hash.hex() == stored_hash
+
+# Better: Use bcrypt or argon2
+import bcrypt
+
+hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+cursor.execute('INSERT INTO users (password) VALUES (?)', (hashed,))</code></pre>
+            
+            <h3>Access Control:</h3>
+            <pre><code>-- Role-based access control schema
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    role TEXT DEFAULT 'user' CHECK(role IN ('admin', 'moderator', 'user'))
+);
+
+CREATE TABLE permissions (
+    id INTEGER PRIMARY KEY,
+    role TEXT NOT NULL,
+    resource TEXT NOT NULL,
+    action TEXT NOT NULL,
+    UNIQUE(role, resource, action)
+);
+
+INSERT INTO permissions (role, resource, action) VALUES
+('admin', 'users', 'create'),
+('admin', 'users', 'read'),
+('admin', 'users', 'update'),
+('admin', 'users', 'delete'),
+('moderator', 'posts', 'update'),
+('moderator', 'posts', 'delete'),
+('user', 'posts', 'create'),
+('user', 'posts', 'read');
+
+-- Check permission
+def has_permission(user_role, resource, action):
+    cursor.execute('''
+        SELECT COUNT(*) FROM permissions 
+        WHERE role = ? AND resource = ? AND action = ?
+    ''', (user_role, resource, action))
+    return cursor.fetchone()[0] > 0</code></pre>
+            
+            <h3>Rate Limiting:</h3>
+            <pre><code>-- Track login attempts
+CREATE TABLE login_attempts (
+    id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL,
+    ip_address TEXT NOT NULL,
+    attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    successful INTEGER DEFAULT 0
+);
+
+-- Check if user is locked out
+def is_locked_out(username):
+    cursor.execute('''
+        SELECT COUNT(*) FROM login_attempts
+        WHERE username = ?
+        AND successful = 0
+        AND attempted_at > datetime('now', '-15 minutes')
+    ''', (username,))
+    
+    attempts = cursor.fetchone()[0]
+    return attempts >= 5  # Lock after 5 failed attempts
+
+-- Clean old attempts periodically
+DELETE FROM login_attempts 
+WHERE attempted_at < datetime('now', '-1 day');</code></pre>
+            
+            <h3>Data Encryption:</h3>
+            <pre><code># Encrypt sensitive data at application level
+from cryptography.fernet import Fernet
+
+# Generate key (store securely, not in database!)
+key = Fernet.generate_key()
+cipher = Fernet(key)
+
+# Encrypt
+sensitive_data = "Secret information"
+encrypted = cipher.encrypt(sensitive_data.encode())
+
+cursor.execute('INSERT INTO secrets (data) VALUES (?)', (encrypted,))
+
+# Decrypt
+cursor.execute('SELECT data FROM secrets WHERE id = ?', (1,))
+encrypted_data = cursor.fetchone()[0]
+decrypted = cipher.decrypt(encrypted_data).decode()
+
+# For SQLite encryption: Use SQLCipher
+# pip install sqlcipher3
+# conn = sqlcipher.connect('encrypted.db')
+# conn.execute("PRAGMA key='your-secret-key'")</code></pre>
+            
+            <div class="tip">
+                <strong>🛡️ Security Checklist:</strong>
+                <ul>
+                    <li>✓ ALWAYS use parameterized queries</li>
+                    <li>✓ NEVER store passwords in plain text</li>
+                    <li>✓ Validate ALL user input</li>
+                    <li>✓ Implement rate limiting for login attempts</li>
+                    <li>✓ Use HTTPS in production</li>
+                    <li>✓ Set proper file permissions on database file</li>
+                    <li>✓ Encrypt sensitive data</li>
+                    <li>✓ Regular security audits</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="migration" class="section">
+            <h2>🔄 Schema Migration & Versioning</h2>
+            
+            <h3>Version Tracking:</h3>
+            <pre><code>-- Create migrations table
+CREATE TABLE IF NOT EXISTS schema_migrations (
+    version INTEGER PRIMARY KEY,
+    applied_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    description TEXT
+);
+
+-- Check current version
+SELECT MAX(version) FROM schema_migrations;</code></pre>
+            
+            <h3>Migration Pattern:</h3>
+            <pre><code># Python migration system
+import sqlite3
+
+MIGRATIONS = {
+    1: """
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL
+        );
+    """,
+    2: """
+        ALTER TABLE users ADD COLUMN email TEXT;
+        CREATE INDEX idx_users_email ON users(email);
+    """,
+    3: """
+        CREATE TABLE posts (
+            id INTEGER PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+    """,
+    4: """
+        ALTER TABLE users ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP;
+    """
+}
+
+def get_current_version(conn):
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS schema_migrations (
+            version INTEGER PRIMARY KEY,
+            applied_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    cursor.execute('SELECT IFNULL(MAX(version), 0) FROM schema_migrations')
+    return cursor.fetchone()[0]
+
+def migrate(conn, target_version=None):
+    current = get_current_version(conn)
+    target = target_version or max(MIGRATIONS.keys())
+    
+    for version in range(current + 1, target + 1):
+        if version in MIGRATIONS:
+            print(f"Applying migration {version}...")
+            
+            try:
+                conn.execute('BEGIN TRANSACTION')
+                conn.executescript(MIGRATIONS[version])
+                conn.execute('INSERT INTO schema_migrations (version) VALUES (?)', (version,))
+                conn.execute('COMMIT')
+                print(f"Migration {version} applied successfully")
+            except Exception as e:
+                conn.execute('ROLLBACK')
+                print(f"Migration {version} failed: {e}")
+                raise
+
+# Usage
+conn = sqlite3.connect('mydb.db')
+migrate(conn)</code></pre>
+            
+            <h3>ALTER TABLE Limitations:</h3>
+            <pre><code>-- SQLite supports limited ALTER TABLE operations:
+-- ✅ Supported:
+ALTER TABLE users ADD COLUMN age INTEGER;
+ALTER TABLE users RENAME TO customers;
+ALTER TABLE users RENAME COLUMN name TO full_name;
+ALTER TABLE users DROP COLUMN age;  -- SQLite 3.35+
+
+-- ❌ NOT directly supported:
+-- - Modify column type
+-- - Add NOT NULL to existing column
+-- - Add/remove constraints
+
+-- Workaround: Create new table, copy data, rename
+BEGIN TRANSACTION;
+
+-- Create new table with changes
+CREATE TABLE users_new (
+    id INTEGER PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,  -- Added NOT NULL
+    age INTEGER CHECK(age >= 0)  -- Added CHECK
+);
+
+-- Copy data
+INSERT INTO users_new (id, username, email, age)
+SELECT id, username, email, age FROM users;
+
+-- Drop old table
+DROP TABLE users;
+
+-- Rename new table
+ALTER TABLE users_new RENAME TO users;
+
+-- Recreate indexes
+CREATE INDEX idx_users_email ON users(email);
+
+COMMIT;</code></pre>
+            
+            <h3>Data Migration:</h3>
+            <pre><code>-- Migrate data between tables
+BEGIN TRANSACTION;
+
+-- Example: Split name into first_name and last_name
+ALTER TABLE users ADD COLUMN first_name TEXT;
+ALTER TABLE users ADD COLUMN last_name TEXT;
+
+UPDATE users 
+SET 
+    first_name = SUBSTR(name, 1, INSTR(name || ' ', ' ') - 1),
+    last_name = SUBSTR(name, INSTR(name || ' ', ' ') + 1);
+
+-- Verify migration
+SELECT name, first_name, last_name FROM users LIMIT 5;
+
+-- If satisfied, remove old column (requires table recreation)
+COMMIT;</code></pre>
+            
+            <h3>Rollback Strategy:</h3>
+            <pre><code># Always backup before migration
+import shutil
+import os
+
+def backup_database(db_path):
+    backup_path = f"{db_path}.backup_{int(time.time())}"
+    shutil.copy2(db_path, backup_path)
+    return backup_path
+
+def safe_migrate(db_path):
+    backup = backup_database(db_path)
+    print(f"Backup created: {backup}")
+    
+    try:
+        conn = sqlite3.connect(db_path)
+        migrate(conn)
+        conn.close()
+        print("Migration successful!")
+        
+    except Exception as e:
+        print(f"Migration failed: {e}")
+        print(f"Restoring from backup: {backup}")
+        shutil.copy2(backup, db_path)
+        raise
+    
+    finally:
+        # Keep backup for safety
+        print(f"Backup retained at: {backup}")</code></pre>
+            
+            <div class="tip">
+                <strong>📋 Migration Best Practices:</strong>
+                <ul>
+                    <li>✓ Always backup before migration</li>
+                    <li>✓ Test migrations on copy first</li>
+                    <li>✓ Use transactions for atomic migrations</li>
+                    <li>✓ Keep migrations small and focused</li>
+                    <li>✓ Document each migration</li>
+                    <li>✓ Never edit applied migrations</li>
+                    <li>✓ Version control migration files</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="testing" class="section">
+            <h2>🧪 Testing SQLite Applications</h2>
+            
+            <h3>Unit Testing Setup:</h3>
+            <pre><code>import unittest
+import sqlite3
+import tempfile
+import os
+
+class TestDatabase(unittest.TestCase):
+    def setUp(self):
+        # Create temporary database for each test
+        self.db_fd, self.db_path = tempfile.mkstemp()
+        self.conn = sqlite3.connect(self.db_path)
+        self.cursor = self.conn.cursor()
+        
+        # Setup schema
+        self.cursor.execute('''
+            CREATE TABLE users (
+                id INTEGER PRIMARY KEY,
+                username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL
+            )
+        ''')
+        self.conn.commit()
+    
+    def tearDown(self):
+        # Clean up
+        self.conn.close()
+        os.close(self.db_fd)
+        os.unlink(self.db_path)
+    
+    def test_insert_user(self):
+        self.cursor.execute(
+            'INSERT INTO users (username, email) VALUES (?, ?)',
+            ('testuser', 'test@test.com')
+        )
+        self.conn.commit()
+        
+        self.cursor.execute('SELECT username FROM users WHERE email = ?', 
+                          ('test@test.com',))
+        result = self.cursor.fetchone()
+        self.assertEqual(result[0], 'testuser')
+    
+    def test_unique_constraint(self):
+        self.cursor.execute(
+            'INSERT INTO users (username, email) VALUES (?, ?)',
+            ('testuser', 'test@test.com')
+        )
+        self.conn.commit()
+        
+        # Should fail due to UNIQUE constraint
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.cursor.execute(
+                'INSERT INTO users (username, email) VALUES (?, ?)',
+                ('testuser', 'other@test.com')
+            )
+
+if __name__ == '__main__':
+    unittest.main()</code></pre>
+            
+            <h3>In-Memory Testing:</h3>
+            <pre><code># Faster testing with in-memory database
+def setUp(self):
+    # Use :memory: for speed
+    self.conn = sqlite3.connect(':memory:')
+    self.cursor = self.conn.cursor()
+    
+    # Load schema
+    with open('schema.sql', 'r') as f:
+        schema = f.read()
+        self.conn.executescript(schema)
+
+# Test fixtures
+def load_fixtures(self):
+    fixtures = [
+        ('user1', 'user1@test.com'),
+        ('user2', 'user2@test.com'),
+        ('user3', 'user3@test.com'),
+    ]
+    
+    self.cursor.executemany(
+        'INSERT INTO users (username, email) VALUES (?, ?)',
+        fixtures
+    )
+    self.conn.commit()</code></pre>
+            
+            <h3>Integration Testing:</h3>
+            <pre><code>import pytest
+
+@pytest.fixture
+def database():
+    conn = sqlite3.connect(':memory:')
+    conn.execute('PRAGMA foreign_keys = ON')
+    
+    # Setup schema
+    conn.executescript('''
+        CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT);
+        CREATE TABLE posts (
+            id INTEGER PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        );
+    ''')
+    
+    yield conn
+    conn.close()
+
+def test_foreign_key_constraint(database):
+    # Should fail - user doesn't exist
+    with pytest.raises(sqlite3.IntegrityError):
+        database.execute('INSERT INTO posts (user_id, title) VALUES (999, "Test")')
+
+def test_cascade_delete(database):
+    # Setup
+    database.execute('INSERT INTO users (id, name) VALUES (1, "Alice")')
+    database.execute('INSERT INTO posts (user_id, title) VALUES (1, "Post 1")')
+    database.commit()
+    
+    # Delete user
+    database.execute('DELETE FROM users WHERE id = 1')
+    
+    # Check posts deleted (if CASCADE configured)
+    cursor = database.execute('SELECT COUNT(*) FROM posts')
+    count = cursor.fetchone()[0]
+    assert count == 0</code></pre>
+            
+            <h3>Performance Testing:</h3>
+            <pre><code>import time
+
+def benchmark_inserts(n=10000):
+    conn = sqlite3.connect(':memory:')
+    cursor = conn.cursor()
+    
+    cursor.execute('CREATE TABLE test (id INTEGER PRIMARY KEY, data TEXT)')
+    
+    # Test 1: Without transaction
+    start = time.time()
+    for i in range(n):
+        cursor.execute('INSERT INTO test (data) VALUES (?)', (f'data{i}',))
+    elapsed = time.time() - start
+    print(f"Without transaction: {elapsed:.2f}s")
+    
+    # Test 2: With transaction
+    cursor.execute('DELETE FROM test')
+    start = time.time()
+    conn.execute('BEGIN TRANSACTION')
+    for i in range(n):
+        cursor.execute('INSERT INTO test (data) VALUES (?)', (f'data{i}',))
+    conn.commit()
+    elapsed = time.time() - start
+    print(f"With transaction: {elapsed:.2f}s")
+    
+    # Test 3: Batch insert
+    cursor.execute('DELETE FROM test')
+    start = time.time()
+    data = [(f'data{i}',) for i in range(n)]
+    cursor.executemany('INSERT INTO test (data) VALUES (?)', data)
+    conn.commit()
+    elapsed = time.time() - start
+    print(f"Batch insert: {elapsed:.2f}s")
+
+benchmark_inserts()</code></pre>
+            
+            <h3>Mock Testing:</h3>
+            <pre><code>from unittest.mock import Mock, patch
+
+class UserRepository:
+    def __init__(self, conn):
+        self.conn = conn
+    
+    def get_user(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))
+        return cursor.fetchone()
+
+# Test with mock
+def test_get_user_with_mock():
+    mock_conn = Mock()
+    mock_cursor = Mock()
+    mock_conn.cursor.return_value = mock_cursor
+    mock_cursor.fetchone.return_value = (1, 'testuser', 'test@test.com')
+    
+    repo = UserRepository(mock_conn)
+    user = repo.get_user(1)
+    
+    assert user[1] == 'testuser'
+    mock_cursor.execute.assert_called_once_with(
+        'SELECT * FROM users WHERE id = ?', (1,)
+    )</code></pre>
+            
+            <div class="tip">
+                <strong>✅ Testing Best Practices:</strong>
+                <ul>
+                    <li>✓ Use :memory: database for speed</li>
+                    <li>✓ Test constraints and validations</li>
+                    <li>✓ Test foreign key cascades</li>
+                    <li>✓ Test transaction rollbacks</li>
+                    <li>✓ Benchmark critical queries</li>
+                    <li>✓ Test with realistic data volumes</li>
+                    <li>✓ Clean up between tests</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="mobile" class="section">
+            <h2>📱 SQLite in Mobile Applications</h2>
+            
+            <h3>Android (Java/Kotlin):</h3>
+            <pre><code>// Define schema contract
+public class DatabaseContract {
+    public static class UserEntry implements BaseColumns {
+        public static final String TABLE_NAME = "users";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_EMAIL = "email";
+    }
+}
+
+// Database helper
+public class DatabaseHelper extends SQLiteOpenHelper {
+    private static final String DATABASE_NAME = "myapp.db";
+    private static final int DATABASE_VERSION = 1;
+    
+    private static final String SQL_CREATE_USERS =
+        "CREATE TABLE " + UserEntry.TABLE_NAME + " (" +
+        UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+        UserEntry.COLUMN_NAME + " TEXT NOT NULL," +
+        UserEntry.COLUMN_EMAIL + " TEXT UNIQUE NOT NULL)";
+    
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+    
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(SQL_CREATE_USERS);
+    }
+    
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE users ADD COLUMN age INTEGER");
+        }
+    }
+}
+
+// Usage
+DatabaseHelper dbHelper = new DatabaseHelper(context);
+SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+// Insert
+ContentValues values = new ContentValues();
+values.put(UserEntry.COLUMN_NAME, "John");
+values.put(UserEntry.COLUMN_EMAIL, "john@test.com");
+long newRowId = db.insert(UserEntry.TABLE_NAME, null, values);
+
+// Query
+Cursor cursor = db.query(
+    UserEntry.TABLE_NAME,
+    null, // all columns
+    UserEntry.COLUMN_EMAIL + " = ?",
+    new String[]{"john@test.com"},
+    null, null, null
+);
+
+while (cursor.moveToNext()) {
+    String name = cursor.getString(
+        cursor.getColumnIndexOrThrow(UserEntry.COLUMN_NAME)
+    );
+}
+cursor.close();</code></pre>
+            
+            <h3>iOS (Swift):</h3>
+            <pre><code>import SQLite3
+
+class Database {
+    var db: OpaquePointer?
+    
+    init() {
+        let fileURL = try! FileManager.default
+            .url(for: .documentDirectory, in: .userDomainMask, 
+                 appropriateFor: nil, create: false)
+            .appendingPathComponent("myapp.db")
+        
+        if sqlite3_open(fileURL.path, &db) != SQLITE_OK {
+            print("Error opening database")
+        }
+        
+        createTable()
+    }
+    
+    func createTable() {
+        let createTableString = """
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL
+            );
+        """
+        
+        var createTableStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, createTableString, -1, 
+                             &createTableStatement, nil) == SQLITE_OK {
+            if sqlite3_step(createTableStatement) == SQLITE_DONE {
+                print("Table created")
+            }
+        }
+        
+        sqlite3_finalize(createTableStatement)
+    }
+    
+    func insertUser(name: String, email: String) {
+        let insertString = "INSERT INTO users (name, email) VALUES (?, ?)"
+        var insertStatement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, insertString, -1, 
+                             &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, 
+                            (name as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, 
+                            (email as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("User inserted")
+            }
+        }
+        
+        sqlite3_finalize(insertStatement)
+    }
+    
+    func queryUsers() -> [(String, String)] {
+        let queryString = "SELECT name, email FROM users"
+        var queryStatement: OpaquePointer?
+        var results: [(String, String)] = []
+        
+        if sqlite3_prepare_v2(db, queryString, -1, 
+                             &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let name = String(cString: sqlite3_column_text(queryStatement, 0))
+                let email = String(cString: sqlite3_column_text(queryStatement, 1))
+                results.append((name, email))
+            }
+        }
+        
+        sqlite3_finalize(queryStatement)
+        return results
+    }
+    
+    deinit {
+        sqlite3_close(db)
+    }
+}</code></pre>
+            
+            <h3>React Native:</h3>
+            <pre><code>// npm install react-native-sqlite-storage
+
+import SQLite from 'react-native-sqlite-storage';
+
+// Enable promises
+SQLite.enablePromise(true);
+
+class DatabaseService {
+    constructor() {
+        this.db = null;
+    }
+    
+    async init() {
+        this.db = await SQLite.openDatabase({
+            name: 'myapp.db',
+            location: 'default',
+        });
+        
+        await this.createTables();
+    }
+    
+    async createTables() {
+        const query = `
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+        `;
+        
+        await this.db.executeSql(query);
+    }
+    
+    async addUser(name, email) {
+        const query = 'INSERT INTO users (name, email) VALUES (?, ?)';
+        const result = await this.db.executeSql(query, [name, email]);
+        return result[0].insertId;
+    }
+    
+    async getUsers() {
+        const query = 'SELECT * FROM users ORDER BY created_at DESC';
+        const result = await this.db.executeSql(query);
+        
+        const users = [];
+        for (let i = 0; i < result[0].rows.length; i++) {
+            users.push(result[0].rows.item(i));
+        }
+        return users;
+    }
+    
+    async updateUser(id, name, email) {
+        const query = 'UPDATE users SET name = ?, email = ? WHERE id = ?';
+        await this.db.executeSql(query, [name, email, id]);
+    }
+    
+    async deleteUser(id) {
+        const query = 'DELETE FROM users WHERE id = ?';
+        await this.db.executeSql(query, [id]);
+    }
+}
+
+// Usage
+const db = new DatabaseService();
+await db.init();
+await db.addUser('John Doe', 'john@test.com');
+const users = await db.getUsers();</code></pre>
+            
+            <h3>Flutter (Dart):</h3>
+            <pre><code>// pubspec.yaml: sqflite: ^2.0.0
+
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
+class DatabaseHelper {
+  static final DatabaseHelper instance = DatabaseHelper._init();
+  static Database? _database;
+  
+  DatabaseHelper._init();
+  
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await _initDB('myapp.db');
+    return _database!;
+  }
+  
+  Future<Database> _initDB(String filePath) async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filePath);
+    
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _createDB,
+    );
+  }
+  
+  Future _createDB(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
+  }
+  
+  Future<int> insertUser(Map<String, dynamic> user) async {
+    final db = await database;
+    return await db.insert('users', user);
+  }
+  
+  Future<List<Map<String, dynamic>>> getUsers() async {
+    final db = await database;
+    return await db.query('users', orderBy: 'created_at DESC');
+  }
+  
+  Future<int> updateUser(int id, Map<String, dynamic> user) async {
+    final db = await database;
+    return await db.update(
+      'users',
+      user,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+  
+  Future<int> deleteUser(int id) async {
+    final db = await database;
+    return await db.delete(
+      'users',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+  
+  Future close() async {
+    final db = await database;
+    db.close();
+  }
+}
+
+// Usage
+final db = DatabaseHelper.instance;
+await db.insertUser({'name': 'John', 'email': 'john@test.com'});
+final users = await db.getUsers();</code></pre>
+            
+            <div class="tip">
+                <strong>📱 Mobile Best Practices:</strong>
+                <ul>
+                    <li>✓ Use WAL mode for better performance</li>
+                    <li>✓ Implement proper migration strategy</li>
+                    <li>✓ Handle database on background thread</li>
+                    <li>✓ Close database when app goes to background</li>
+                    <li>✓ Implement data sync strategy for offline-first apps</li>
+                    <li>✓ Encrypt sensitive data</li>
+                    <li>✓ Regular backups to cloud storage</li>
+                    <li>✓ Test with low storage scenarios</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="backup" class="section">
+            <h2>💾 Backup & Recovery Strategies</h2>
+            
+            <h3>Command Line Backup:</h3>
+            <pre><code>-- Full database dump
+sqlite3 mydb.db .dump > backup.sql
+
+-- Backup specific table
+sqlite3 mydb.db "SELECT * FROM users" > users_backup.csv
+
+-- Binary backup (exact copy)
+sqlite3 mydb.db ".backup backup.db"
+
+-- Restore from dump
+sqlite3 newdb.db < backup.sql</code></pre>
+            
+            <h3>Python Backup:</h3>
+            <pre><code>import sqlite3
+import shutil
+from datetime import datetime
+
+def backup_database(source_db, backup_dir='backups'):
+    import os
+    os.makedirs(backup_dir, exist_ok=True)
+    
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    backup_path = f"{backup_dir}/backup_{timestamp}.db"
+    
+    # Method 1: File copy (simple)
+    shutil.copy2(source_db, backup_path)
+    
+    return backup_path
+
+def backup_with_sqlite(source_db, backup_path):
+    # Method 2: SQLite backup API (safer during active use)
+    source = sqlite3.connect(source<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQLite Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #e8f4f8;
+            padding: 15px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4fc3f7;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section h2 {
+            font-size: 1.1rem;
+            color: #4fc3f7;
+            margin-bottom: 12px;
+        }
+        
+        .section h3 {
+            font-size: 1rem;
+            color: #81d4fa;
+            margin: 15px 0 8px;
+        }
+        
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #a5d6a7;
+        }
+        
+        pre {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+            border: 1px solid rgba(79,195,247,0.3);
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #a5d6a7;
+        }
+        
+        ul {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .tip {
+            background: rgba(76,175,80,0.15);
+            border-left: 4px solid #4caf50;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+        }
+        
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(30,60,114,0.95);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            background: rgba(79,195,247,0.2);
+            border: 1px solid #4fc3f7;
+            color: #4fc3f7;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+            background: rgba(79,195,247,0.3);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SQLite Beginner's Guide</h1>
+        
+        <div class="nav">
+            <button class="nav-btn" onclick="showSection('intro')">Intro</button>
+            <button class="nav-btn" onclick="showSection('setup')">Setup</button>
+            <button class="nav-btn" onclick="showSection('basics')">Basics</button>
+            <button class="nav-btn" onclick="showSection('crud')">CRUD</button>
+            <button class="nav-btn" onclick="showSection('advanced')">Advanced</button>
+            <button class="nav-btn" onclick="showSection('constraints')">Constraints</button>
+            <button class="nav-btn" onclick="showSection('indexes')">Indexes</button>
+            <button class="nav-btn" onclick="showSection('transactions')">Transactions</button>
+            <button class="nav-btn" onclick="showSection('joins')">Joins Deep</button>
+            <button class="nav-btn" onclick="showSection('optimization')">Optimization</button>
+            <button class="nav-btn" onclick="showSection('datatypes')">Data Types</button>
+            <button class="nav-btn" onclick="showSection('errors')">Errors</button>
+            <button class="nav-btn" onclick="showSection('realworld')">Real World</button>
+            <button class="nav-btn" onclick="showSection('security')">Security</button>
+            <button class="nav-btn" onclick="showSection('migration')">Migration</button>
+            <button class="nav-btn" onclick="showSection('testing')">Testing</button>
+            <button class="nav-btn" onclick="showSection('mobile')">Mobile Apps</button>
+            <button class="nav-btn" onclick="showSection('backup')">Backup</button>
+            <button class="nav-btn" onclick="showSection('bestpractices')">Best Practices</button>
+            <button class="nav-btn" onclick="showSection('all')">Show All</button>
+        </div>
+        
+        <div id="intro" class="section">
+            <h2>📚 What is SQLite?</h2>
+            <p>SQLite is a lightweight, serverless, self-contained SQL database engine. Perfect for mobile apps, embedded systems, and small-to-medium websites.</p>
+            
+            <h3>Key Features:</h3>
+            <ul>
+                <li>Zero configuration - no setup required</li>
+                <li>Single file database</li>
+                <li>Cross-platform</li>
+                <li>ACID compliant</li>
+                <li>Public domain license</li>
+            </ul>
+        </div>
+        
+        <div id="setup" class="section">
+            <h2>⚙️ Getting Started</h2>
+            
+            <h3>Installation:</h3>
+            <pre><code># Python (built-in)
+import sqlite3
+
+# Node.js
+npm install better-sqlite3
+
+# Command line
+apt-get install sqlite3  # Linux
+brew install sqlite3      # Mac</code></pre>
+
+            <h3>Create Database:</h3>
+            <pre><code># Python
+conn = sqlite3.connect('mydb.db')
+
+# CLI
+sqlite3 mydb.db</code></pre>
+        </div>
+        
+        <div id="basics" class="section">
+            <h2>🔤 Basic Syntax</h2>
+            
+            <h3>Data Types:</h3>
+            <ul>
+                <li><code>INTEGER</code> - whole numbers</li>
+                <li><code>REAL</code> - floating point</li>
+                <li><code>TEXT</code> - strings</li>
+                <li><code>BLOB</code> - binary data</li>
+                <li><code>NULL</code> - null value</li>
+            </ul>
+            
+            <h3>Create Table:</h3>
+            <pre><code>CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE,
+    age INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+        </div>
+        
+        <div id="crud" class="section">
+            <h2>✏️ CRUD Operations</h2>
+            
+            <h3>INSERT:</h3>
+            <pre><code>INSERT INTO users (name, email, age) 
+VALUES ('John Doe', 'john@email.com', 25);
+
+-- Multiple rows
+INSERT INTO users (name, email) VALUES 
+('Alice', 'alice@email.com'),
+('Bob', 'bob@email.com');</code></pre>
+            
+            <h3>SELECT:</h3>
+            <pre><code>-- All columns
+SELECT * FROM users;
+
+-- Specific columns
+SELECT name, email FROM users;
+
+-- With conditions
+SELECT * FROM users WHERE age > 20;
+
+-- Sorting
+SELECT * FROM users ORDER BY name ASC;
+
+-- Limit
+SELECT * FROM users LIMIT 10;</code></pre>
+            
+            <h3>UPDATE:</h3>
+            <pre><code>UPDATE users 
+SET age = 26 
+WHERE name = 'John Doe';
+
+-- Multiple columns
+UPDATE users 
+SET age = 27, email = 'newemail@email.com'
+WHERE id = 1;</code></pre>
+            
+            <h3>DELETE:</h3>
+            <pre><code>DELETE FROM users WHERE id = 1;
+
+-- Delete all (careful!)
+DELETE FROM users;</code></pre>
+        </div>
+        
+        <div id="advanced" class="section">
+            <h2>🚀 Advanced Concepts</h2>
+            
+            <h3>WHERE Operators:</h3>
+            <pre><code>SELECT * FROM users WHERE age >= 18;
+SELECT * FROM users WHERE name LIKE 'J%';
+SELECT * FROM users WHERE age BETWEEN 20 AND 30;
+SELECT * FROM users WHERE email IN ('a@b.com', 'c@d.com');</code></pre>
+            
+            <h3>Joins:</h3>
+            <pre><code>-- INNER JOIN
+SELECT users.name, orders.product 
+FROM users 
+INNER JOIN orders ON users.id = orders.user_id;
+
+-- LEFT JOIN
+SELECT users.name, orders.product 
+FROM users 
+LEFT JOIN orders ON users.id = orders.user_id;</code></pre>
+            
+            <h3>Aggregates:</h3>
+            <pre><code>SELECT COUNT(*) FROM users;
+SELECT AVG(age) FROM users;
+SELECT MAX(age) FROM users;
+SELECT MIN(age) FROM users;
+SELECT SUM(price) FROM products;</code></pre>
+            
+            <h3>Group By:</h3>
+            <pre><code>SELECT country, COUNT(*) as user_count
+FROM users 
+GROUP BY country
+HAVING COUNT(*) > 5;</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Pro Tips:</strong>
+                <ul>
+                    <li>Always use prepared statements to prevent SQL injection</li>
+                    <li>Create indexes for faster queries: <code>CREATE INDEX idx_email ON users(email)</code></li>
+                    <li>Use transactions for multiple operations: <code>BEGIN; ... COMMIT;</code></li>
+                    <li>Regularly <code>VACUUM</code> to optimize database size</li>
+                </ul>
+            </div>
+            
+            <h3>Python Example:</h3>
+            <pre><code>import sqlite3
+
+# Connect
+conn = sqlite3.connect('mydb.db')
+cursor = conn.cursor()
+
+# Execute
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS tasks (
+        id INTEGER PRIMARY KEY,
+        task TEXT NOT NULL,
+        done INTEGER DEFAULT 0
+    )
+''')
+
+# Insert with parameters (safe!)
+cursor.execute('INSERT INTO tasks (task) VALUES (?)', ('Learn SQLite',))
+
+# Query
+cursor.execute('SELECT * FROM tasks')
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+# Commit and close
+conn.commit()
+conn.close()</code></pre>
+        </div>
+        
+        <div id="constraints" class="section">
+            <h2>🔒 Constraints</h2>
+            
+            <h3>Primary Key:</h3>
+            <pre><code>CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT
+);
+
+-- Composite primary key
+CREATE TABLE order_items (
+    order_id INTEGER,
+    product_id INTEGER,
+    quantity INTEGER,
+    PRIMARY KEY (order_id, product_id)
+);</code></pre>
+            
+            <h3>Foreign Key:</h3>
+            <pre><code>-- Enable foreign keys (off by default)
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    total REAL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);</code></pre>
+            
+            <h3>NOT NULL & UNIQUE:</h3>
+            <pre><code>CREATE TABLE accounts (
+    id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
+);</code></pre>
+            
+            <h3>CHECK Constraint:</h3>
+            <pre><code>CREATE TABLE products (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    price REAL CHECK(price > 0),
+    stock INTEGER CHECK(stock >= 0),
+    category TEXT CHECK(category IN ('Electronics', 'Books', 'Clothing'))
+);</code></pre>
+            
+            <h3>DEFAULT Values:</h3>
+            <pre><code>CREATE TABLE posts (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT,
+    status TEXT DEFAULT 'draft',
+    views INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Constraint Tips:</strong>
+                <ul>
+                    <li>Foreign keys are NOT enforced by default - always run <code>PRAGMA foreign_keys = ON</code></li>
+                    <li>Use CHECK constraints for data validation at database level</li>
+                    <li>AUTOINCREMENT uses more CPU - only use when you need guaranteed unique IDs</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="indexes" class="section">
+            <h2>⚡ Indexes & Performance</h2>
+            
+            <h3>Create Indexes:</h3>
+            <pre><code>-- Single column index
+CREATE INDEX idx_users_email ON users(email);
+
+-- Multi-column index
+CREATE INDEX idx_orders_user_date ON orders(user_id, order_date);
+
+-- Unique index
+CREATE UNIQUE INDEX idx_username ON users(username);
+
+-- Partial index (conditional)
+CREATE INDEX idx_active_users ON users(email) 
+WHERE status = 'active';</code></pre>
+            
+            <h3>View Indexes:</h3>
+            <pre><code>-- List all indexes
+SELECT name FROM sqlite_master 
+WHERE type = 'index';
+
+-- Indexes for specific table
+PRAGMA index_list('users');
+
+-- Index details
+PRAGMA index_info('idx_users_email');</code></pre>
+            
+            <h3>Drop Index:</h3>
+            <pre><code>DROP INDEX IF EXISTS idx_users_email;</code></pre>
+            
+            <h3>Query Performance:</h3>
+            <pre><code>-- Explain query plan
+EXPLAIN QUERY PLAN 
+SELECT * FROM users WHERE email = 'test@email.com';
+
+-- Analyze database
+ANALYZE;</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Index Tips:</strong>
+                <ul>
+                    <li>Index columns used in WHERE, JOIN, ORDER BY clauses</li>
+                    <li>Don't over-index - each index slows down INSERT/UPDATE</li>
+                    <li>Indexes on small tables (<1000 rows) may not help</li>
+                    <li>Multi-column indexes: put most selective column first</li>
+                    <li>Use partial indexes for frequently filtered subsets</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="transactions" class="section">
+            <h2>💾 Transactions & Concurrency</h2>
+            
+            <h3>Basic Transaction:</h3>
+            <pre><code>BEGIN TRANSACTION;
+
+INSERT INTO accounts (username, balance) 
+VALUES ('alice', 1000);
+
+UPDATE accounts 
+SET balance = balance - 100 
+WHERE username = 'alice';
+
+INSERT INTO transactions (from_user, amount) 
+VALUES ('alice', 100);
+
+COMMIT;  -- or ROLLBACK; to undo</code></pre>
+            
+            <h3>Transaction Types:</h3>
+            <pre><code>-- Deferred (default) - locks when needed
+BEGIN DEFERRED TRANSACTION;
+
+-- Immediate - write lock immediately
+BEGIN IMMEDIATE TRANSACTION;
+
+-- Exclusive - blocks all other connections
+BEGIN EXCLUSIVE TRANSACTION;</code></pre>
+            
+            <h3>Savepoints:</h3>
+            <pre><code>BEGIN TRANSACTION;
+
+INSERT INTO users (name) VALUES ('John');
+SAVEPOINT sp1;
+
+INSERT INTO users (name) VALUES ('Jane');
+SAVEPOINT sp2;
+
+-- Rollback to sp2, keeps John
+ROLLBACK TO SAVEPOINT sp2;
+
+COMMIT;</code></pre>
+            
+            <h3>Python Transaction Example:</h3>
+            <pre><code>import sqlite3
+
+conn = sqlite3.connect('bank.db')
+conn.execute('PRAGMA foreign_keys = ON')
+
+try:
+    cursor = conn.cursor()
+    
+    # Transfer money
+    cursor.execute('''
+        UPDATE accounts 
+        SET balance = balance - 100 
+        WHERE id = 1
+    ''')
+    
+    cursor.execute('''
+        UPDATE accounts 
+        SET balance = balance + 100 
+        WHERE id = 2
+    ''')
+    
+    conn.commit()
+    print("Transfer successful")
+    
+except sqlite3.Error as e:
+    conn.rollback()
+    print(f"Error: {e}")
+    
+finally:
+    conn.close()</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Transaction Tips:</strong>
+                <ul>
+                    <li>Always use transactions for multiple related operations</li>
+                    <li>Batch inserts in transactions - 100x faster than individual commits</li>
+                    <li>Keep transactions short to avoid locking issues</li>
+                    <li>Use IMMEDIATE for write-heavy operations</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="joins" class="section">
+            <h2>🔗 Advanced Joins & Relationships</h2>
+            
+            <h3>INNER JOIN Explained:</h3>
+            <pre><code>-- Returns only matching rows from both tables
+SELECT 
+    users.name,
+    orders.order_date,
+    orders.total
+FROM users
+INNER JOIN orders ON users.id = orders.user_id;</code></pre>
+            
+            <h3>LEFT JOIN (LEFT OUTER JOIN):</h3>
+            <pre><code>-- Returns all users, even those without orders
+SELECT 
+    users.name,
+    COUNT(orders.id) as order_count,
+    IFNULL(SUM(orders.total), 0) as total_spent
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id
+GROUP BY users.id;</code></pre>
+            
+            <h3>RIGHT JOIN Alternative:</h3>
+            <pre><code>-- SQLite doesn't have RIGHT JOIN, use LEFT JOIN instead
+-- RIGHT JOIN equivalent:
+SELECT * FROM orders
+LEFT JOIN users ON orders.user_id = users.id;</code></pre>
+            
+            <h3>CROSS JOIN (Cartesian Product):</h3>
+            <pre><code>-- Every combination of rows
+SELECT 
+    colors.name as color,
+    sizes.name as size
+FROM colors
+CROSS JOIN sizes;
+
+-- Useful for generating date ranges
+SELECT DATE('2024-01-01', '+' || n || ' days') as date
+FROM (
+    SELECT 0 as n UNION SELECT 1 UNION SELECT 2
+    UNION SELECT 3 UNION SELECT 4
+);</code></pre>
+            
+            <h3>Self JOIN:</h3>
+            <pre><code>-- Find employees and their managers
+SELECT 
+    e.name as employee,
+    m.name as manager
+FROM employees e
+LEFT JOIN employees m ON e.manager_id = m.id;
+
+-- Find users from same city
+SELECT 
+    u1.name as user1,
+    u2.name as user2,
+    u1.city
+FROM users u1
+INNER JOIN users u2 
+    ON u1.city = u2.city 
+    AND u1.id < u2.id;</code></pre>
+            
+            <h3>Multiple JOINs:</h3>
+            <pre><code>SELECT 
+    customers.name,
+    orders.order_date,
+    products.name as product,
+    order_items.quantity,
+    order_items.price
+FROM customers
+INNER JOIN orders ON customers.id = orders.customer_id
+INNER JOIN order_items ON orders.id = order_items.order_id
+INNER JOIN products ON order_items.product_id = products.id
+WHERE orders.order_date > DATE('now', '-30 days');</code></pre>
+            
+            <h3>JOIN with Aggregates:</h3>
+            <pre><code>-- Users with their stats
+SELECT 
+    users.name,
+    COUNT(DISTINCT orders.id) as total_orders,
+    COUNT(DISTINCT posts.id) as total_posts,
+    MAX(orders.order_date) as last_order
+FROM users
+LEFT JOIN orders ON users.id = orders.user_id
+LEFT JOIN posts ON users.id = posts.author_id
+GROUP BY users.id
+HAVING total_orders > 5;</code></pre>
+            
+            <div class="tip">
+                <strong>💡 JOIN Tips:</strong>
+                <ul>
+                    <li>INNER JOIN = only matching rows (intersection)</li>
+                    <li>LEFT JOIN = all left table + matches from right</li>
+                    <li>Use table aliases (u, o, p) for readability</li>
+                    <li>Index foreign key columns for faster joins</li>
+                    <li>EXPLAIN QUERY PLAN to check join performance</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="optimization" class="section">
+            <h2>🚀 Query Optimization Techniques</h2>
+            
+            <h3>Query Analysis:</h3>
+            <pre><code>-- See how SQLite executes query
+EXPLAIN QUERY PLAN
+SELECT * FROM users WHERE email = 'test@test.com';
+
+-- Look for "SCAN TABLE" (bad) vs "SEARCH TABLE" (good)
+-- Example output:
+-- SCAN TABLE users = no index, slow
+-- SEARCH TABLE users USING INDEX = fast</code></pre>
+            
+            <h3>Optimization Strategies:</h3>
+            <pre><code>-- ❌ BAD: Selecting all columns
+SELECT * FROM orders WHERE user_id = 5;
+
+-- ✅ GOOD: Only needed columns
+SELECT id, total, order_date FROM orders WHERE user_id = 5;
+
+-- ❌ BAD: Function on indexed column
+SELECT * FROM users WHERE UPPER(email) = 'TEST@TEST.COM';
+
+-- ✅ GOOD: Index-friendly query
+SELECT * FROM users WHERE email = 'test@test.com';
+
+-- ❌ BAD: OR conditions prevent index usage
+SELECT * FROM products WHERE name = 'Phone' OR category = 'Electronics';
+
+-- ✅ GOOD: Use UNION or IN
+SELECT * FROM products WHERE name = 'Phone'
+UNION
+SELECT * FROM products WHERE category = 'Electronics';</code></pre>
+            
+            <h3>Covering Indexes:</h3>
+            <pre><code>-- Index that contains all needed columns
+CREATE INDEX idx_user_email_name ON users(email, name);
+
+-- Query uses only indexed columns (no table lookup)
+SELECT name FROM users WHERE email = 'test@test.com';</code></pre>
+            
+            <h3>Query Optimization Settings:</h3>
+            <pre><code>-- Increase cache for better performance
+PRAGMA cache_size = -64000;  -- 64MB
+
+-- Use WAL mode for concurrent reads
+PRAGMA journal_mode = WAL;
+
+-- Analyze database statistics
+ANALYZE;
+
+-- Update outdated statistics
+ANALYZE users;
+
+-- Memory settings
+PRAGMA temp_store = MEMORY;
+PRAGMA mmap_size = 268435456;  -- 256MB memory-mapped I/O</code></pre>
+            
+            <h3>Batch Operations:</h3>
+            <pre><code>-- ❌ SLOW: Individual inserts
+INSERT INTO logs (message) VALUES ('msg1');
+INSERT INTO logs (message) VALUES ('msg2');
+-- ... 1000 times
+
+-- ✅ FAST: Transaction batch
+BEGIN TRANSACTION;
+INSERT INTO logs (message) VALUES ('msg1');
+INSERT INTO logs (message) VALUES ('msg2');
+-- ... 1000 times
+COMMIT;
+
+-- ✅ FASTER: Multi-row insert
+INSERT INTO logs (message) VALUES 
+('msg1'), ('msg2'), ('msg3'), ('msg4');
+
+-- Python bulk insert
+data = [('msg1',), ('msg2',), ('msg3',)]
+cursor.executemany('INSERT INTO logs (message) VALUES (?)', data)</code></pre>
+            
+            <h3>Pagination Best Practices:</h3>
+            <pre><code>-- ❌ SLOW for large offsets
+SELECT * FROM posts ORDER BY created_at DESC LIMIT 10 OFFSET 10000;
+
+-- ✅ FAST: Keyset pagination
+SELECT * FROM posts 
+WHERE created_at < '2024-01-01 12:00:00'
+ORDER BY created_at DESC 
+LIMIT 10;
+
+-- With cursor-based pagination
+SELECT * FROM posts 
+WHERE id < 12345
+ORDER BY id DESC 
+LIMIT 10;</code></pre>
+            
+            <div class="tip">
+                <strong>⚡ Performance Checklist:</strong>
+                <ul>
+                    <li>✓ Use indexes on WHERE/JOIN/ORDER BY columns</li>
+                    <li>✓ SELECT only needed columns, not *</li>
+                    <li>✓ Batch operations in transactions</li>
+                    <li>✓ Use prepared statements</li>
+                    <li>✓ Enable WAL mode for concurrency</li>
+                    <li>✓ Run ANALYZE periodically</li>
+                    <li>✓ Avoid functions on indexed columns</li>
+                    <li>✓ Use LIMIT when possible</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="datatypes" class="section">
+            <h2>📊 Data Types Deep Dive</h2>
+            
+            <h3>Type Affinity:</h3>
+            <pre><code>-- SQLite uses type affinity (flexible typing)
+CREATE TABLE flexible (
+    id INTEGER,      -- Prefers integers
+    price REAL,      -- Prefers floating point
+    name TEXT,       -- Prefers text
+    data BLOB,       -- Prefers binary
+    mixed NUMERIC    -- Tries to convert to number
+);
+
+-- You can store any type in any column!
+INSERT INTO flexible VALUES (
+    123,          -- INTEGER
+    19.99,        -- REAL
+    'Product',    -- TEXT
+    X'89504E47',  -- BLOB (hex notation)
+    '456'         -- Stored as INTEGER in NUMERIC column
+);</code></pre>
+            
+            <h3>Boolean Values:</h3>
+            <pre><code>-- No native boolean, use INTEGER
+CREATE TABLE settings (
+    id INTEGER PRIMARY KEY,
+    is_active INTEGER DEFAULT 1,  -- 0 = false, 1 = true
+    is_verified INTEGER CHECK(is_verified IN (0, 1))
+);
+
+-- Query booleans
+SELECT * FROM settings WHERE is_active = 1;
+SELECT * FROM settings WHERE is_verified;</code></pre>
+            
+            <h3>Date & Time Storage:</h3>
+            <pre><code>-- Store as TEXT (ISO8601)
+CREATE TABLE events (
+    id INTEGER PRIMARY KEY,
+    event_date TEXT,  -- '2024-12-09'
+    event_time TEXT,  -- '14:30:00'
+    event_datetime TEXT  -- '2024-12-09 14:30:00'
+);
+
+-- Store as INTEGER (Unix timestamp)
+CREATE TABLE logs (
+    id INTEGER PRIMARY KEY,
+    created_at INTEGER DEFAULT (strftime('%s', 'now'))
+);
+
+-- Store as REAL (Julian day)
+CREATE TABLE appointments (
+    id INTEGER PRIMARY KEY,
+    appointment REAL DEFAULT (julianday('now'))
+);
+
+-- Query date comparisons
+SELECT * FROM events 
+WHERE DATE(event_date) BETWEEN '2024-01-01' AND '2024-12-31';
+
+SELECT * FROM logs 
+WHERE created_at > strftime('%s', 'now', '-7 days');</code></pre>
+            
+            <h3>JSON in SQLite:</h3>
+            <pre><code>-- Store JSON as TEXT
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    metadata TEXT  -- JSON data
+);
+
+INSERT INTO products (name, metadata) VALUES 
+('Laptop', '{"brand": "Apple", "specs": {"ram": 16, "storage": 512}}');
+
+-- JSON functions (SQLite 3.38+)
+SELECT 
+    name,
+    json_extract(metadata, '$.brand') as brand,
+    json_extract(metadata, '$.specs.ram') as ram
+FROM products;
+
+-- Query JSON
+SELECT * FROM products 
+WHERE json_extract(metadata, '$.brand') = 'Apple';
+
+-- Validate JSON
+SELECT * FROM products 
+WHERE json_valid(metadata);</code></pre>
+            
+            <h3>BLOB Operations:</h3>
+            <pre><code>-- Store binary data
+CREATE TABLE files (
+    id INTEGER PRIMARY KEY,
+    filename TEXT,
+    content BLOB,
+    size INTEGER
+);
+
+-- Python: Store file
+with open('image.png', 'rb') as f:
+    blob_data = f.read()
+    cursor.execute(
+        'INSERT INTO files (filename, content) VALUES (?, ?)',
+        ('image.png', blob_data)
+    )
+
+-- Retrieve file
+cursor.execute('SELECT content FROM files WHERE filename = ?', ('image.png',))
+blob = cursor.fetchone()[0]
+with open('output.png', 'wb') as f:
+    f.write(blob)</code></pre>
+            
+            <h3>Type Conversion Functions:</h3>
+            <pre><code>-- CAST
+SELECT CAST(price AS INTEGER) FROM products;
+SELECT CAST('123' AS INTEGER);
+SELECT CAST('2024-01-01' AS DATE);
+
+-- TYPEOF
+SELECT 
+    value,
+    TYPEOF(value) as type
+FROM mixed_table;
+
+-- Output: 'integer', 'real', 'text', 'blob', 'null'</code></pre>
+            
+            <div class="tip">
+                <strong>💡 Data Type Tips:</strong>
+                <ul>
+                    <li>Use INTEGER for IDs, booleans, timestamps</li>
+                    <li>Use REAL for decimals, scientific data</li>
+                    <li>Use TEXT for strings, dates, JSON</li>
+                    <li>Use BLOB for binary files, images</li>
+                    <li>Store dates as TEXT (ISO8601) for readability</li>
+                    <li>Store prices as INTEGER (cents) to avoid rounding errors</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="errors" class="section">
+            <h2>🐛 Error Handling & Debugging</h2>
+            
+            <h3>Common Errors & Solutions:</h3>
+            <pre><code>-- ERROR: table already exists
+-- SOLUTION: Use IF NOT EXISTS
+CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY);
+
+-- ERROR: no such table
+-- SOLUTION: Check table name, create table first
+.tables  -- CLI: list all tables
+
+-- ERROR: UNIQUE constraint failed
+-- SOLUTION: Check for duplicates, use INSERT OR IGNORE
+INSERT OR IGNORE INTO users (email) VALUES ('test@test.com');
+INSERT OR REPLACE INTO users (id, email) VALUES (1, 'new@test.com');
+
+-- ERROR: NOT NULL constraint failed
+-- SOLUTION: Provide all required fields or set DEFAULT
+INSERT INTO users (name) VALUES ('John');  -- if email NOT NULL, this fails
+
+-- ERROR: FOREIGN KEY constraint failed
+-- SOLUTION: Enable foreign keys, ensure referenced row exists
+PRAGMA foreign_keys = ON;
+INSERT INTO orders (user_id) VALUES (999);  -- fails if user 999 doesn't exist</code></pre>
+            
+            <h3>INSERT Conflict Resolution:</h3>
+            <pre><code>-- REPLACE: delete old, insert new
+INSERT OR REPLACE INTO settings (key, value) 
+VALUES ('theme', 'dark');
+
+-- IGNORE: skip if exists
+INSERT OR IGNORE INTO users (email) VALUES ('test@test.com');
+
+-- ABORT: stop transaction (default)
+-- FAIL: continue transaction, return error
+-- ROLLBACK: rollback entire transaction
+
+-- ON CONFLICT clause (modern syntax)
+INSERT INTO users (id, name, email) 
+VALUES (1, 'John', 'john@test.com')
+ON CONFLICT(id) DO UPDATE SET 
+    name = excluded.name,
+    email = excluded.email;</code></pre>
+            
+            <h3>Python Error Handling:</h3>
+            <pre><code>import sqlite3
+
+try:
+    conn = sqlite3.connect('mydb.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('INSERT INTO users (email) VALUES (?)', ('test@test.com',))
+    conn.commit()
+    
+except sqlite3.IntegrityError as e:
+    print(f"Integrity error: {e}")  # UNIQUE/NOT NULL/FK violation
+    conn.rollback()
+    
+except sqlite3.OperationalError as e:
+    print(f"Operational error: {e}")  # Table doesn't exist, locked, etc
+    
+except sqlite3.DatabaseError as e:
+    print(f"Database error: {e}")  # General DB error
+    
+finally:
+    if conn:
+        conn.close()</code></pre>
+            
+            <h3>Debugging Queries:</h3>
+            <pre><code>-- Check table structure
+PRAGMA table_info('users');
+
+-- Check indexes
+PRAGMA index_list('users');
+
+-- Check foreign keys
+PRAGMA foreign_key_list('orders');
+
+-- Check for foreign key violations
+PRAGMA foreign_key_check;
+PRAGMA foreign_key_check('orders');
+
+-- Database integrity
+PRAGMA integrity_check;
+
+-- Quick check
+PRAGMA quick_check;
+
+-- Show query plan
+EXPLAIN SELECT * FROM users WHERE email = 'test@test.com';
+EXPLAIN QUERY PLAN SELECT * FROM users WHERE email = 'test@test.com';</code></pre>
+            
+            <h3>Locking & Concurrency Issues:</h3>
+            <pre><code>-- ERROR: database is locked
+-- SOLUTION: Set timeout, use WAL mode
+
+-- Python: Set busy timeout
+conn = sqlite3.connect('mydb.db', timeout=10.0)
+
+-- Enable WAL for better concurrency
+PRAGMA journal_mode = WAL;
+
+-- Check current locks
+PRAGMA locking_mode;
+
+-- Reset database if corrupted
+-- CLI: sqlite3 mydb.db "PRAGMA integrity_check"
+-- If failed: restore from backup</code></pre>
+            
+            <h3>Common Mistakes:</h3>
+            <pre><code>-- ❌ Forgetting to commit
+conn = sqlite3.connect('mydb.db')
+cursor.execute('INSERT INTO users...')
+# conn.commit()  -- MISSING! Data not saved
+conn.close()
+
+-- ✅ Always commit or use context manager
+with sqlite3.connect('mydb.db') as conn:
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO users...')
+    # Auto-commits on exit
+
+-- ❌ Not closing connections
+conn = sqlite3.connect('mydb.db')
+# ... do work
+# conn.close()  -- MISSING! Resource leak
+
+-- ✅ Use context manager or try/finally
+try:
+    conn = sqlite3.connect('mydb.db')
+    # ... do work
+finally:
+    conn.close()</code></pre>
+            
+            <div class="tip">
+                <strong>🔍 Debugging Checklist:</strong>
+                <ul>
+                    <li>✓ Check PRAGMA integrity_check</li>
+                    <li>✓ Use EXPLAIN QUERY PLAN</li>
+                    <li>✓ Enable foreign keys: PRAGMA foreign_keys = ON</li>
+                    <li>✓ Set timeout for busy database</li>
+                    <li>✓ Use WAL mode for concurrency</li>
+                    <li>✓ Always commit or rollback transactions</li>
+                    <li>✓ Close connections properly</li>
+                    <li>✓ Check table/column names (case-sensitive)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="realworld" class="section">
+            <h2>🌍 Real-World Examples</h2>
+            
+            <h3>E-Commerce Schema:</h3>
+            <pre><code>-- Complete e-commerce database
+CREATE TABLE customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    phone TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sku TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    price REAL NOT NULL CHECK(price > 0),
+    stock INTEGER DEFAULT 0 CHECK(stock >= 0),
+    category TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'paid', 'shipped', 'delivered', 'cancelled')),
+    total REAL DEFAULT 0,
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+CREATE TABLE order_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL CHECK(quantity > 0),
+    price REAL NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Indexes for performance
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+CREATE INDEX idx_orders_date ON orders(order_date);
+CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_products_category ON products(category);</code></pre>
+            
+            <h3>Blog/CMS Schema:</h3>
+            <pre><code>CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT DEFAULT 'user' CHECK(role IN ('admin', 'editor', 'user')),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    content TEXT NOT NULL,
+    excerpt TEXT,
+    status TEXT DEFAULT 'draft' CHECK(status IN ('draft', 'published', 'archived')),
+    views INTEGER DEFAULT 0,
+    published_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(id)
+);
+
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    post_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    approved INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE tags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL,
+    slug TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE post_tags (
+    post_id INTEGER NOT NULL,
+    tag_id INTEGER NOT NULL,
+    PRIMARY KEY (post_id, tag_id),
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
+
+-- Full-text search (FTS5)
+CREATE VIRTUAL TABLE posts_fts USING fts5(
+    title, content, content='posts', content_rowid='id'
+);
+
+-- Trigger to keep FTS in sync
+CREATE TRIGGER posts_ai AFTER INSERT ON posts BEGIN
+    INSERT INTO posts_fts(rowid, title, content) 
+    VALUES (new.id, new.title, new.content);
+END;</code></pre>
+            
+            <h3>Analytics Queries:</h3>
+            <pre><code>-- Top 10 customers by revenue
+SELECT 
+    c.name,
+    c.email,
+    COUNT(o.id) as order_count,
+    SUM(o.total) as total_spent
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id
+ORDER BY total_spent DESC
+LIMIT 10;
+
+-- Monthly sales report
+SELECT 
+    strftime('%Y-%m', order_date) as month,
+    COUNT(*) as orders,
+    SUM(total) as revenue,
+    AVG(total) as avg_order_value
+FROM orders
+WHERE status IN ('paid', 'shipped', 'delivered')
+GROUP BY month
+ORDER BY month DESC;
+
+-- Product performance
+SELECT 
+    p.name,
+    p.category,
+    COUNT(oi.id) as times_ordered,
+    SUM(oi.quantity) as units_sold,
+    SUM(oi.quantity * oi.price) as revenue
+FROM products p
+LEFT JOIN order_items oi ON p.id = oi.product_id
+GROUP BY p.id
+ORDER BY revenue DESC
+LIMIT 20;
+
+-- Customer lifetime value
+SELECT 
+    c.email,
+    COUNT(o.id) as total_orders,
+    SUM(o.total) as lifetime_value,
+    MIN(o.order_date) as first_order,
+    MAX(o.order_date) as last_order,
+    julianday(MAX(o.order_date)) - julianday(MIN(o.order_date)) as days_as_customer
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id
+GROUP BY c.id
+HAVING total_orders > 1
+ORDER BY lifetime_value DESC;</code></pre>
+            
+            <h3>Task Management App:</h3>
+            <pre><code>CREATE TABLE projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    status TEXT DEFAULT 'active',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    priority TEXT DEFAULT 'medium' CHECK(priority IN ('low', 'medium', 'high', 'urgent')),
+    status TEXT DEFAULT 'todo' CHECK(status IN ('todo', 'in_progress', 'review', 'done')),
+    due_date DATE,
+    completed_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+);
+
+-- View: Overdue tasks
+CREATE VIEW overdue_tasks AS
+SELECT 
+    t.id,
+    t.title,
+    t.priority,
+    p.name as project,
+    t.due_date,
+    julianday('now') - julianday(t.due_date) as days_overdue
+FROM tasks t
+JOIN projects p ON t.project_id = p.id
+WHERE t.status != 'done' 
+  AND t.due_date < DATE('now')
+ORDER BY days_overdue DESC;
+
+-- Query: Task statistics
+SELECT 
+    p.name as project,
+    COUNT(CASE WHEN t.status = 'done' THEN 1 END) as completed,
+    COUNT(CASE WHEN t.status != 'done' THEN 1 END) as pending,
+    COUNT(CASE WHEN t.due_date < DATE('now') AND t.status != 'done' THEN 1 END) as overdue
+FROM projects p
+LEFT JOIN tasks t ON p.id = t.project_id
+WHERE p.status = 'active'
+GROUP BY p.id;</code></pre>
+            
+            <div class="tip">
+                <strong>🎯 Schema Design Tips:</strong>
+                <ul>
+                    <li>Use INTEGER PRIMARY KEY for auto-incrementing IDs</li>
+                    <li>Add indexes on foreign keys and frequently queried columns</li>
+                    <li>Use CHECK constraints for enum-like values</li>
+                    <li>Always use ON DELETE CASCADE for child records</li>
+                    <li>Add created_at/updated_at timestamps</li>
+                    <li>Use views for complex recurring queries</li>
+                    <li>Consider FTS5 for full-text search needs</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="bestpractices" class="section">
+            <h2>✨ Best Practices & Tips</h2>
+            
+            <h3>Security - Prevent SQL Injection:</h3>
+            <pre><code>-- ❌ NEVER DO THIS (vulnerable!)
+query = f"SELECT * FROM users WHERE name = '{user_input}'"
+
+-- ✅ ALWAYS USE PARAMETERIZED QUERIES
+# Python
+cursor.execute('SELECT * FROM users WHERE name = ?', (user_input,))
+
+# Node.js
+db.prepare('SELECT * FROM users WHERE name = ?').get(userInput);
+
+# Multiple parameters
+cursor.execute('''
+    INSERT INTO users (name, email, age) 
+    VALUES (?, ?, ?)
+''', (name, email, age))</code></pre>
+            
+            <h3>Database Optimization:</h3>
+            <pre><code>-- Check database integrity
+PRAGMA integrity_check;
+
+-- Optimize database file size
+VACUUM;
+
+-- Set cache size (in pages, -KB for KB)
+PRAGMA cache_size = -10000;  -- 10MB
+
+-- Set journal mode
+PRAGMA journal_mode = WAL;  -- Better concurrency
+
+-- Set synchronous mode
+PRAGMA synchronous = NORMAL;  -- Balance safety/speed</code></pre>
+            
+            <h3>Useful PRAGMAs:</h3>
+            <pre><code>-- Database info
+PRAGMA database_list;
+PRAGMA table_info('users');
+
+-- Foreign keys
+PRAGMA foreign_keys = ON;
+PRAGMA foreign_key_check;
+
+-- Auto vacuum
+PRAGMA auto_vacuum = FULL;
+
+-- Temp store in memory
+PRAGMA temp_store = MEMORY;</code></pre>
+            
+            <h3>String Functions:</h3>
+            <pre><code>-- Case conversion
+SELECT UPPER(name), LOWER(email) FROM users;
+
+-- Substring
+SELECT SUBSTR(name, 1, 3) FROM users;
+
+-- Concatenation
+SELECT name || ' - ' || email FROM users;
+
+-- Trim
+SELECT TRIM(name) FROM users;
+
+-- Replace
+SELECT REPLACE(email, '@', ' at ') FROM users;
+
+-- Length
+SELECT LENGTH(name) FROM users WHERE LENGTH(name) > 5;</code></pre>
+            
+            <h3>Date/Time Functions:</h3>
+            <pre><code>-- Current date/time
+SELECT DATE('now');
+SELECT DATETIME('now');
+SELECT TIME('now');
+
+-- Date arithmetic
+SELECT DATE('now', '+7 days');
+SELECT DATE('now', '-1 month');
+SELECT DATE('now', 'start of year');
+
+-- Format dates
+SELECT STRFTIME('%Y-%m-%d', created_at) FROM posts;
+SELECT STRFTIME('%H:%M', created_at) FROM posts;
+
+-- Date comparison
+SELECT * FROM orders 
+WHERE DATE(order_date) = DATE('now');</code></pre>
+            
+            <h3>Math Functions:</h3>
+            <pre><code>SELECT ABS(-15);           -- 15
+SELECT ROUND(3.14159, 2);  -- 3.14
+SELECT MAX(price, discount) FROM products;
+SELECT MIN(price, discount) FROM products;
+SELECT RANDOM();           -- Random number</code></pre>
+            
+            <h3>Conditional Logic:</h3>
+            <pre><code>-- CASE statement
+SELECT name,
+    CASE 
+        WHEN age < 18 THEN 'Minor'
+        WHEN age < 65 THEN 'Adult'
+        ELSE 'Senior'
+    END AS age_group
+FROM users;
+
+-- IFNULL
+SELECT name, IFNULL(phone, 'No phone') FROM users;
+
+-- COALESCE (first non-null)
+SELECT COALESCE(nickname, username, email) FROM users;</code></pre>
+            
+            <h3>Subqueries:</h3>
+            <pre><code>-- Subquery in WHERE
+SELECT name FROM users 
+WHERE id IN (SELECT user_id FROM orders WHERE total > 100);
+
+-- Subquery in SELECT
+SELECT name, 
+    (SELECT COUNT(*) FROM orders WHERE user_id = users.id) AS order_count
+FROM users;
+
+-- Subquery in FROM
+SELECT AVG(order_count) FROM (
+    SELECT COUNT(*) AS order_count 
+    FROM orders 
+    GROUP BY user_id
+);</code></pre>
+            
+            <h3>Views:</h3>
+            <pre><code>-- Create view
+CREATE VIEW active_users AS
+SELECT id, name, email 
+FROM users 
+WHERE status = 'active';
+
+-- Query view
+SELECT * FROM active_users;
+
+-- Drop view
+DROP VIEW IF EXISTS active_users;</code></pre>
+            
+            <h3>Triggers:</h3>
+            <pre><code>-- Auto-update timestamp
+CREATE TRIGGER update_timestamp 
+AFTER UPDATE ON posts
+BEGIN
+    UPDATE posts 
+    SET updated_at = CURRENT_TIMESTAMP 
+    WHERE id = NEW.id;
+END;
+
+-- Audit trail
+CREATE TRIGGER log_deletions
+BEFORE DELETE ON users
+BEGIN
+    INSERT INTO audit_log (action, user_id, timestamp)
+    VALUES ('DELETE', OLD.id, CURRENT_TIMESTAMP);
+END;</code></pre>
+            
+            <h3>Backup & Export:</h3>
+            <pre><code>-- Backup database (CLI)
+sqlite3 mydb.db ".backup backup.db"
+
+-- Export to SQL
+sqlite3 mydb.db ".dump" > backup.sql
+
+-- Export to CSV
+sqlite3 mydb.db -header -csv "SELECT * FROM users;" > users.csv
+
+-- Import from SQL
+sqlite3 mydb.db < backup.sql</code></pre>
+            
+            <div class="tip">
+                <strong>🎯 Performance Best Practices:</strong>
+                <ul>
+                    <li>Use WAL mode for better concurrency: <code>PRAGMA journal_mode = WAL</code></li>
+                    <li>Batch inserts in transactions (1000x faster)</li>
+                    <li>Use prepared statements and reuse them</li>
+                    <li>Limit SELECT * - only fetch columns you need</li>
+                    <li>Use LIMIT when you don't need all results</li>
+                    <li>Index foreign keys and frequently searched columns</li>
+                    <li>Run VACUUM periodically to reclaim space</li>
+                    <li>Keep database under 1GB for best performance</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <strong>⚠️ Common Mistakes to Avoid:</strong>
+                <ul>
+                    <li>Forgetting to enable foreign keys</li>
+                    <li>Not using parameterized queries (SQL injection risk)</li>
+                    <li>Forgetting to commit transactions</li>
+                    <li>Using TEXT for numbers (affects sorting)</li>
+                    <li>Not closing database connections</li>
+                    <li>Over-indexing (slows writes)</li>
+                    <li>Storing large files in database (use file system)</li>
+                </ul>
+            </div>
+            
+            <h3>Node.js Complete Example:</h3>
+            <pre><code>const Database = require('better-sqlite3');
+const db = new Database('myapp.db');
+
+// Enable WAL mode
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
+// Create table
+db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+`);
+
+// Prepared statement (reusable, fast)
+const insert = db.prepare(`
+    INSERT INTO users (name, email) 
+    VALUES (?, ?)
+`);
+
+// Transaction for bulk insert
+const insertMany = db.transaction((users) => {
+    for (const user of users) {
+        insert.run(user.name, user.email);
+    }
+});
+
+// Use it
+insertMany([
+    { name: 'Alice', email: 'alice@test.com' },
+    { name: 'Bob', email: 'bob@test.com' }
+]);
+
+// Query
+const users = db.prepare('SELECT * FROM users').all();
+console.log(users);
+
+// Close
+db.close();</code></pre>
+        </div>
+    </div>
+    
+    <script>
+        function showSection(section) {
+            const sections = ['intro', 'setup', 'basics', 'crud', 'advanced', 'constraints', 'indexes', 'transactions', 'joins', 'optimization', 'datatypes', 'errors', 'realworld', 'bestpractices'];
+            
+            if (section === 'all') {
+                sections.forEach(s => {
+                    document.getElementById(s).classList.remove('hidden');
+                });
+            } else {
+                sections.forEach(s => {
+                    if (s === section) {
+                        document.getElementById(s).classList.remove('hidden');
+                    } else {
+                        document.getElementById(s).classList.add('hidden');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
